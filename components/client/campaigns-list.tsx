@@ -1,41 +1,63 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
-const campaigns = [
-  {
-    name: "Fall Launch",
-    status: "Active",
-    budget: 45000,
-    influencers: 54,
-    engagement: "5.3%",
-    dates: "Sep 1 - Oct 15",
-  },
-  { name: "Back-to-School", status: "Draft", budget: 12500, influencers: 12, engagement: "—", dates: "TBD" },
-  {
-    name: "Holiday Teaser",
-    status: "Paused",
-    budget: 22100,
-    influencers: 28,
-    engagement: "4.1%",
-    dates: "Nov 10 - Dec 5",
-  },
-  {
-    name: "UGC Sprint",
-    status: "Completed",
-    budget: 60000,
-    influencers: 77,
-    engagement: "6.0%",
-    dates: "Aug 1 - Sep 1",
-  },
-]
+interface Campaign {
+  _id: string
+  name: string
+  status: string
+  budget: number
+  influencers: number
+  engagement: string
+  dates: string
+}
 
 export function CampaignsList() {
+  const [campaigns, setCampaigns] = useState<Campaign[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchCampaigns = async () => {
+      try {
+        setLoading(true)
+        const response = await fetch("/api/campaigns")
+        if (!response.ok) {
+          throw new Error("Failed to fetch campaigns")
+        }
+        const data = await response.json()
+        console.log("[v0] Fetched campaigns:", data)
+        setCampaigns(data)
+      } catch (err) {
+        console.error("[v0] Error fetching campaigns:", err)
+        setError(err instanceof Error ? err.message : "Unknown error")
+        setCampaigns([])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchCampaigns()
+  }, [])
+
+  if (loading) {
+    return <div className="text-center py-8">Loading campaigns...</div>
+  }
+
+  if (error) {
+    return <div className="text-center py-8 text-red-500">Error: {error}</div>
+  }
+
+  if (campaigns.length === 0) {
+    return <div className="text-center py-8 text-muted-foreground">No campaigns found. Create one to get started.</div>
+  }
+
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {campaigns.map((c) => (
-        <Card key={c.name}>
+        <Card key={c._id}>
           <CardHeader className="border-b py-4">
             <CardTitle className="flex items-center justify-between">
               <span>{c.name}</span>

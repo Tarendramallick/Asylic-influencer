@@ -6,7 +6,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { ArrowLeft, Eye, EyeOff, Check, X } from "lucide-react"
+import { ArrowLeft, Eye, EyeOff } from "lucide-react"
 import Link from "next/link"
 import { useAuth } from "@/lib/auth-context"
 import { useToast } from "@/hooks/use-toast"
@@ -24,44 +24,6 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [errors, setErrors] = useState<{
-    name?: string
-    email?: string
-    password?: string
-    confirmPassword?: string
-  }>({})
-
-  const passwordsMatch = password && confirmPassword && password === confirmPassword
-  const passwordsDontMatch = password && confirmPassword && password !== confirmPassword
-
-  const validateForm = () => {
-    const newErrors: typeof errors = {}
-
-    if (!name.trim()) {
-      newErrors.name = "Full name is required"
-    }
-
-    if (!email.trim()) {
-      newErrors.email = "Email is required"
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = "Invalid email address"
-    }
-
-    if (!password) {
-      newErrors.password = "Password is required"
-    } else if (password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters"
-    }
-
-    if (!confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password"
-    } else if (password !== confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match"
-    }
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -75,7 +37,12 @@ export default function SignUpPage() {
       return
     }
 
-    if (!validateForm()) {
+    if (password !== confirmPassword) {
+      toast({
+        title: "Error",
+        description: "Passwords do not match",
+        variant: "destructive",
+      })
       return
     }
 
@@ -83,11 +50,6 @@ export default function SignUpPage() {
 
     try {
       await register(name, email, password, role)
-      toast({
-        title: "Success",
-        description: `${role === "influencer" ? "Influencer" : "Brand"} account created successfully!`,
-        variant: "default",
-      })
     } catch (error) {
       toast({
         title: "Sign up failed",
@@ -127,15 +89,7 @@ export default function SignUpPage() {
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="mb-4 -ml-2 w-fit"
-            onClick={() => {
-              setRole("")
-              setErrors({})
-            }}
-          >
+          <Button variant="ghost" size="sm" className="mb-4 -ml-2 w-fit" onClick={() => setRole("")}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
@@ -153,13 +107,9 @@ export default function SignUpPage() {
                 type="text"
                 placeholder="John Doe"
                 value={name}
-                onChange={(e) => {
-                  setName(e.target.value)
-                  if (errors.name) setErrors({ ...errors, name: undefined })
-                }}
-                className={errors.name ? "border-red-500" : ""}
+                onChange={(e) => setName(e.target.value)}
+                required
               />
-              {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
             </div>
 
             <div className="space-y-2">
@@ -168,13 +118,9 @@ export default function SignUpPage() {
                 type="email"
                 placeholder="you@example.com"
                 value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value)
-                  if (errors.email) setErrors({ ...errors, email: undefined })
-                }}
-                className={errors.email ? "border-red-500" : ""}
+                onChange={(e) => setEmail(e.target.value)}
+                required
               />
-              {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
             </div>
 
             <div className="space-y-2">
@@ -184,11 +130,8 @@ export default function SignUpPage() {
                   type={showPassword ? "text" : "password"}
                   placeholder="Create a strong password"
                   value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value)
-                    if (errors.password) setErrors({ ...errors, password: undefined })
-                  }}
-                  className={errors.password ? "border-red-500" : ""}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
                 <button
                   type="button"
@@ -198,12 +141,6 @@ export default function SignUpPage() {
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
-              {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
-              {password && password.length >= 6 && (
-                <p className="text-sm text-green-600 flex items-center gap-1">
-                  <Check className="w-4 h-4" /> Password meets requirements
-                </p>
-              )}
             </div>
 
             <div className="space-y-2">
@@ -213,11 +150,8 @@ export default function SignUpPage() {
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="Confirm your password"
                   value={confirmPassword}
-                  onChange={(e) => {
-                    setConfirmPassword(e.target.value)
-                    if (errors.confirmPassword) setErrors({ ...errors, confirmPassword: undefined })
-                  }}
-                  className={errors.confirmPassword ? "border-red-500" : ""}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
                 />
                 <button
                   type="button"
@@ -227,25 +161,9 @@ export default function SignUpPage() {
                   {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
-              {confirmPassword && (
-                <div
-                  className={`text-sm flex items-center gap-1 ${passwordsMatch ? "text-green-600" : "text-red-500"}`}
-                >
-                  {passwordsMatch ? (
-                    <>
-                      <Check className="w-4 h-4" /> Passwords match
-                    </>
-                  ) : (
-                    <>
-                      <X className="w-4 h-4" /> Passwords do not match
-                    </>
-                  )}
-                </div>
-              )}
-              {errors.confirmPassword && <p className="text-sm text-red-500">{errors.confirmPassword}</p>}
             </div>
 
-            <Button type="submit" disabled={isLoading || !passwordsMatch || !name || !email} className="w-full h-12">
+            <Button type="submit" disabled={isLoading} className="w-full h-12">
               {isLoading ? "Creating account..." : "Create Account"}
             </Button>
           </form>
