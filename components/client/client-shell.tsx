@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import {
   SidebarProvider,
   Sidebar,
@@ -25,13 +24,6 @@ import { BarChart3, Users2, Megaphone, FileText, CreditCard, Settings, LogOut } 
 import type * as React from "react"
 import { CreateCampaignDialog } from "@/components/client/create-campaign"
 
-interface SearchResult {
-  id: string
-  name?: string
-  title?: string
-  type: string
-}
-
 export function ClientShell({
   children,
   className,
@@ -39,10 +31,6 @@ export function ClientShell({
   children: React.ReactNode
   className?: string
 }) {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([])
-  const [showResults, setShowResults] = useState(false)
-
   const nav = [
     { label: "Dashboard", icon: BarChart3, href: "/client" },
     { label: "Campaigns", icon: Megaphone, href: "/client/campaigns" },
@@ -51,34 +39,6 @@ export function ClientShell({
     { label: "Payments", icon: CreditCard, href: "/client/payments" },
     { label: "Settings", icon: Settings, href: "/client/settings" },
   ]
-
-  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value
-    setSearchQuery(query)
-
-    if (query.length < 2) {
-      setSearchResults([])
-      setShowResults(false)
-      return
-    }
-
-    try {
-      // Search both clients and weblinks
-      const [clientsRes, weblinksRes] = await Promise.all([
-        fetch(`/api/search/clients?q=${encodeURIComponent(query)}`),
-        fetch(`/api/search/weblinks?q=${encodeURIComponent(query)}`),
-      ])
-
-      const clients = await clientsRes.json()
-      const weblinks = await weblinksRes.json()
-
-      setSearchResults([...clients, ...weblinks])
-      setShowResults(true)
-    } catch (error) {
-      console.error("[v0] Search error:", error)
-      setSearchResults([])
-    }
-  }
 
   return (
     <SidebarProvider>
@@ -132,30 +92,8 @@ export function ClientShell({
           <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-3">
             <SidebarTrigger />
             <h1 className="text-balance text-lg font-semibold">Client Portal</h1>
-            <div className="ml-auto flex items-center gap-2 relative">
-              <div className="relative">
-                <Input
-                  placeholder="Search campaigns or clients..."
-                  className="h-9 w-56"
-                  aria-label="Search"
-                  value={searchQuery}
-                  onChange={handleSearch}
-                  onFocus={() => searchResults.length > 0 && setShowResults(true)}
-                />
-                {showResults && searchResults.length > 0 && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-background border rounded-md shadow-lg z-50">
-                    {searchResults.map((result) => (
-                      <div
-                        key={result.id}
-                        className="px-3 py-2 hover:bg-muted cursor-pointer text-sm border-b last:border-b-0"
-                      >
-                        <div className="font-medium">{result.name || result.title}</div>
-                        <div className="text-xs text-muted-foreground">{result.type}</div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+            <div className="ml-auto flex items-center gap-2">
+              <Input placeholder="Search campaigns..." className="h-9 w-56" aria-label="Search campaigns" />
               <CreateCampaignDialog />
             </div>
           </div>
