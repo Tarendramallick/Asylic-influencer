@@ -43,10 +43,7 @@ export default function LoginPage() {
   }
 
   const handleInstagramLogin = () => {
-    toast({
-      title: "Instagram OAuth",
-      description: "Instagram login flow would be implemented here with OAuth providers",
-    })
+    window.location.href = "/api/auth/instagram"
   }
 
   if (!role) {
