@@ -75,8 +75,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setToken(data.token)
       setUser(data.user)
 
-      // Redirect based on role
-      router.push(`/${data.user.role}`)
+      if (data.user.role === "brand" || data.user.role === "admin") {
+        router.push("/client")
+      } else {
+        router.push("/influencer")
+      }
     } finally {
       setLoading(false)
     }
@@ -104,8 +107,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setToken(data.token)
       setUser(data.user)
 
-      // Redirect based on role
-      router.push(`/${data.user.role}`)
+      if (role === "brand") {
+        router.push("/client")
+      } else {
+        router.push("/influencer")
+      }
     } finally {
       setLoading(false)
     }
