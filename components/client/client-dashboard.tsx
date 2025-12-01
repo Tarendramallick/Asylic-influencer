@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import {
@@ -13,13 +14,7 @@ import { cn } from "@/lib/utils"
 import { ArrowUpRight, DollarSign, Megaphone, Users2 } from "lucide-react"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts"
 import { PieChart, Pie, Cell } from "recharts"
-
-const kpis = [
-  { label: "Active Campaigns", value: "24", icon: Megaphone },
-  { label: "Creators Engaged", value: "1,342", icon: Users2 },
-  { label: "Spend (MTD)", value: "$128k", icon: DollarSign },
-  { label: "ROI (Est.)", value: "3.8x", icon: ArrowUpRight },
-]
+import { useAuth } from "@/lib/auth-context"
 
 const performanceData = [
   { day: "Mon", Impressions: 120, Clicks: 18 },
@@ -31,26 +26,97 @@ const performanceData = [
   { day: "Sun", Impressions: 260, Clicks: 41 },
 ]
 
-const campaigns = [
-  { name: "Fall Launch", status: "Live", creators: 54, budget: "$45,000" },
-  { name: "Back-to-School", status: "Planning", creators: 12, budget: "$12,500" },
-  { name: "Holiday Teaser", status: "Review", creators: 28, budget: "$22,100" },
-  { name: "UGC Sprint", status: "Live", creators: 77, budget: "$60,000" },
-]
-
-const budgetData = [
-  { name: "Fall Launch", value: 45000, key: "Fall Launch" },
-  { name: "Back-to-School", value: 12500, key: "Back-to-School" },
-  { name: "Holiday Teaser", value: 22100, key: "Holiday Teaser" },
-  { name: "UGC Sprint", value: 60000, key: "UGC Sprint" },
-]
-
 export function ClientDashboard({ className }: { className?: string }) {
+  const { user, token } = useAuth()
+  const [campaigns, setCampaigns] = useState<any[]>([])
+  const [kpis, setKpis] = useState({
+    activeCampaigns: "0",
+    creatorsEngaged: "0",
+    spendMtd: "$0",
+    roi: "0x",
+  })
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!user || !token) {
+      setIsLoading(false)
+      return
+    }
+
+    const fetchCampaigns = async () => {
+      try {
+        setIsLoading(true)
+        setError(null)
+        const response = await fetch("/api/campaigns", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch campaigns")
+        }
+
+        const data = await response.json()
+        setCampaigns(data.campaigns || [])
+
+        if (data.campaigns && data.campaigns.length > 0) {
+          const activeCampaigns = data.campaigns.filter((c: any) => c.status === "active").length
+          const totalCreators = data.campaigns.reduce((sum: number, c: any) => sum + (c.applications?.length || 0), 0)
+          const totalSpend = data.campaigns.reduce((sum: number, c: any) => sum + (c.budget || 0), 0)
+
+          setKpis({
+            activeCampaigns: activeCampaigns.toString(),
+            creatorsEngaged: totalCreators.toString(),
+            spendMtd: `$${(totalSpend / 1000).toFixed(0)}k`,
+            roi: "3.8x",
+          })
+        }
+      } catch (error) {
+        console.error("[v0] Failed to fetch campaigns:", error)
+        setError("Failed to load campaigns. Please try again.")
+        setCampaigns([])
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchCampaigns()
+  }, [user, token])
+
+  const budgetData = campaigns.slice(0, 4).map((c) => ({
+    name: c.name,
+    value: c.budget || 0,
+    key: c.name,
+  }))
+
+  const tableData = campaigns.slice(0, 4).map((c) => ({
+    name: c.name,
+    status: c.status,
+    creators: (c.applications || []).length,
+    budget: `$${(c.budget / 1000).toFixed(0)}k`,
+  }))
+
   return (
     <div className={cn("grid gap-4", className)}>
+      {/* Show error message if failed to load */}
+      {error && (
+        <Card className="border-destructive bg-destructive/10">
+          <CardContent className="py-4 text-destructive">
+            <p>{error}</p>
+          </CardContent>
+        </Card>
+      )}
+
       {/* KPIs */}
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {kpis.map((k) => (
+        {[
+          { label: "Active Campaigns", value: kpis.activeCampaigns, icon: Megaphone },
+          { label: "Creators Engaged", value: kpis.creatorsEngaged, icon: Users2 },
+          { label: "Spend (MTD)", value: kpis.spendMtd, icon: DollarSign },
+          { label: "ROI (Est.)", value: kpis.roi, icon: ArrowUpRight },
+        ].map((k) => (
           <Card key={k.label}>
             <CardHeader className="flex items-center justify-between gap-2 border-b py-4">
               <CardTitle className="text-sm">{k.label}</CardTitle>
@@ -99,25 +165,26 @@ export function ClientDashboard({ className }: { className?: string }) {
           <CardDescription>Spend distribution across active campaigns</CardDescription>
         </CardHeader>
         <CardContent className="py-4">
-          <ChartContainer
-            config={{
-              "Fall Launch": { label: "Fall Launch", color: "var(--color-chart-1)" },
-              "Back-to-School": { label: "Back-to-School", color: "var(--color-chart-2)" },
-              "Holiday Teaser": { label: "Holiday Teaser", color: "var(--color-chart-3)" },
-              "UGC Sprint": { label: "UGC Sprint", color: "var(--color-chart-4)" },
-            }}
-            className="aspect-[16/6] w-full"
-          >
-            <ResponsiveContainer>
-              <PieChart>
-                <Pie data={budgetData} dataKey="value" nameKey="name" innerRadius={60} outerRadius={90}>
-                  {budgetData.map((entry) => (
-                    <Cell key={entry.name} fill={`var(--color-${entry.key.replaceAll(" ", "\\ ")})`} />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
-          </ChartContainer>
+          {budgetData.length > 0 ? (
+            <ChartContainer
+              config={Object.fromEntries(
+                budgetData.map((d) => [d.name, { label: d.name, color: "var(--color-chart-1)" }]),
+              )}
+              className="aspect-[16/6] w-full"
+            >
+              <ResponsiveContainer>
+                <PieChart>
+                  <Pie data={budgetData} dataKey="value" nameKey="name" innerRadius={60} outerRadius={90}>
+                    {budgetData.map((entry, index) => (
+                      <Cell key={entry.name} fill={`hsl(${(index * 360) / budgetData.length}, 70%, 60%)`} />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+          ) : (
+            <p className="text-muted-foreground text-center py-8">No campaigns to display</p>
+          )}
         </CardContent>
       </Card>
 
@@ -128,27 +195,35 @@ export function ClientDashboard({ className }: { className?: string }) {
           <CardDescription>Key initiatives running this week</CardDescription>
         </CardHeader>
         <CardContent className="py-2">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Campaign</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Creators</TableHead>
-                <TableHead>Budget</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {campaigns.map((c) => (
-                <TableRow key={c.name}>
-                  <TableCell>{c.name}</TableCell>
-                  <TableCell>{c.status}</TableCell>
-                  <TableCell>{c.creators}</TableCell>
-                  <TableCell>{c.budget}</TableCell>
+          {tableData.length > 0 ? (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Campaign</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Creators</TableHead>
+                  <TableHead>Budget</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-            <TableCaption>Showing 4 of 24 campaigns</TableCaption>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {tableData.map((c) => (
+                  <TableRow key={c.name}>
+                    <TableCell>{c.name}</TableCell>
+                    <TableCell>{c.status}</TableCell>
+                    <TableCell>{c.creators}</TableCell>
+                    <TableCell>{c.budget}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+              <TableCaption>
+                Showing {tableData.length} of {campaigns.length} campaigns
+              </TableCaption>
+            </Table>
+          ) : (
+            <p className="text-muted-foreground text-center py-8">
+              {isLoading ? "Loading campaigns..." : "No campaigns yet. Create your first campaign to get started."}
+            </p>
+          )}
         </CardContent>
       </Card>
     </div>

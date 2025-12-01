@@ -22,7 +22,10 @@ import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 import { BarChart3, Users2, Megaphone, FileText, CreditCard, Settings, LogOut } from "lucide-react"
 import type * as React from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/lib/auth-context"
 import { CreateCampaignDialog } from "@/components/client/create-campaign"
+import { AuthGuard } from "@/components/auth-guard"
 
 export function ClientShell({
   children,
@@ -31,6 +34,14 @@ export function ClientShell({
   children: React.ReactNode
   className?: string
 }) {
+  const router = useRouter()
+  const { user, logout } = useAuth()
+
+  const handleLogout = () => {
+    logout()
+    router.push("/")
+  }
+
   const nav = [
     { label: "Dashboard", icon: BarChart3, href: "/client" },
     { label: "Campaigns", icon: Megaphone, href: "/client/campaigns" },
@@ -41,66 +52,72 @@ export function ClientShell({
   ]
 
   return (
-    <SidebarProvider>
-      <Sidebar variant="inset" collapsible="icon">
-        <SidebarHeader className="px-2 py-2">
-          <div className="flex items-center gap-2 px-2">
-            <div className="size-6 rounded-md bg-primary" aria-hidden />
-            <span className="font-semibold">InfluencePro</span>
-          </div>
-        </SidebarHeader>
-
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel>Client</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {nav.map((item) => (
-                  <SidebarMenuItem key={item.label}>
-                    <SidebarMenuButton asChild>
-                      <a href={item.href} aria-label={item.label} className="flex items-center gap-2">
-                        <item.icon />
-                        <span>{item.label}</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-
-        <SidebarSeparator />
-
-        <SidebarFooter>
-          <div className="px-2 pb-2">
-            <a href="/client/support" className="text-sm text-muted-foreground hover:underline">
-              Support
-            </a>
-          </div>
-          <Button variant="ghost" className="justify-start">
-            <LogOut className="mr-2 size-4" />
-            Logout
-          </Button>
-        </SidebarFooter>
-
-        <SidebarRail />
-      </Sidebar>
-
-      <SidebarInset className={cn("min-h-svh", className)}>
-        <header className="sticky top-0 z-10 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-3">
-            <SidebarTrigger />
-            <h1 className="text-balance text-lg font-semibold">Client Portal</h1>
-            <div className="ml-auto flex items-center gap-2">
-              <Input placeholder="Search campaigns..." className="h-9 w-56" aria-label="Search campaigns" />
-              <CreateCampaignDialog />
+    <AuthGuard requiredRole="brand">
+      <SidebarProvider>
+        <Sidebar variant="inset" collapsible="icon">
+          <SidebarHeader className="px-2 py-2">
+            <div className="flex items-center gap-2 px-2">
+              <div className="size-6 rounded-md bg-primary" aria-hidden />
+              <span className="font-semibold">InfluencePro</span>
             </div>
-          </div>
-        </header>
+          </SidebarHeader>
 
-        <main className="mx-auto w-full max-w-7xl p-4">{children}</main>
-      </SidebarInset>
-    </SidebarProvider>
+          <SidebarContent>
+            <SidebarGroup>
+              <SidebarGroupLabel>Client</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {nav.map((item) => (
+                    <SidebarMenuItem key={item.label}>
+                      <SidebarMenuButton asChild>
+                        <a href={item.href} aria-label={item.label} className="flex items-center gap-2">
+                          <item.icon />
+                          <span>{item.label}</span>
+                        </a>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </SidebarContent>
+
+          <SidebarSeparator />
+
+          <SidebarFooter>
+            <div className="px-2 pb-2 text-xs">
+              <p className="text-muted-foreground truncate">{user?.name || "User"}</p>
+              <p className="text-xs text-muted-foreground/70 truncate">{user?.email}</p>
+            </div>
+            <div className="px-2 pb-2">
+              <a href="/client/support" className="text-sm text-muted-foreground hover:underline">
+                Support
+              </a>
+            </div>
+            <Button variant="ghost" className="justify-start" onClick={handleLogout}>
+              <LogOut className="mr-2 size-4" />
+              Logout
+            </Button>
+          </SidebarFooter>
+
+          <SidebarRail />
+        </Sidebar>
+
+        <SidebarInset className={cn("min-h-svh", className)}>
+          <header className="sticky top-0 z-10 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-3">
+              <SidebarTrigger />
+              <h1 className="text-balance text-lg font-semibold">Client Portal</h1>
+              <div className="ml-auto flex items-center gap-2">
+                <Input placeholder="Search campaigns..." className="h-9 w-56" aria-label="Search campaigns" />
+                <CreateCampaignDialog />
+              </div>
+            </div>
+          </header>
+
+          <main className="mx-auto w-full max-w-7xl p-4">{children}</main>
+        </SidebarInset>
+      </SidebarProvider>
+    </AuthGuard>
   )
 }
