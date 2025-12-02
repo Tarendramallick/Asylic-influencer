@@ -2,14 +2,38 @@ import { NextResponse } from "next/server"
 
 export function GET() {
   const clientId = process.env.NEXT_PUBLIC_INSTAGRAM_APP_ID
-  const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/instagram/callback`
-  const scope = "user_profile,instagram_business_account,instagram_business_basic"
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL
 
-  const authUrl = new URL("https://api.instagram.com/oauth/authorize")
-  authUrl.searchParams.set("client_id", clientId!)
-  authUrl.searchParams.set("redirect_uri", redirectUri)
-  authUrl.searchParams.set("scope", scope)
-  authUrl.searchParams.set("response_type", "code")
+  if (!clientId) {
+    console.error("[v0] Missing NEXT_PUBLIC_INSTAGRAM_APP_ID environment variable")
+    return NextResponse.json(
+      { error: "Instagram app is not configured. Please add NEXT_PUBLIC_INSTAGRAM_APP_ID to environment variables." },
+      { status: 500 },
+    )
+  }
 
-  return NextResponse.redirect(authUrl.toString())
+  if (!appUrl) {
+    console.error("[v0] Missing NEXT_PUBLIC_APP_URL environment variable")
+    return NextResponse.json(
+      { error: "App URL is not configured. Please add NEXT_PUBLIC_APP_URL to environment variables." },
+      { status: 500 },
+    )
+  }
+
+  const redirectUri = `${appUrl}/api/auth/instagram/callback`
+  const scope = "user_profile,instagram_business_basic"
+
+  try {
+    const authUrl = new URL("https://api.instagram.com/oauth/authorize")
+    authUrl.searchParams.set("client_id", clientId)
+    authUrl.searchParams.set("redirect_uri", redirectUri)
+    authUrl.searchParams.set("scope", scope)
+    authUrl.searchParams.set("response_type", "code")
+
+    console.log("[v0] Instagram OAuth redirect to:", authUrl.toString().split("?")[0])
+    return NextResponse.redirect(authUrl.toString())
+  } catch (error) {
+    console.error("[v0] Instagram auth route error:", error)
+    return NextResponse.json({ error: "Failed to initiate Instagram login" }, { status: 500 })
+  }
 }
