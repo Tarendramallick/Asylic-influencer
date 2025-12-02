@@ -9,10 +9,23 @@ const client = new MongoClient(mongoUri)
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   const code = searchParams.get("code")
-  const state = searchParams.get("state")
+  const error = searchParams.get("error")
+  const errorDescription = searchParams.get("error_description")
+
+  if (error) {
+    console.error(`[v0] Instagram OAuth error: ${error} - ${errorDescription}`)
+    const redirectUrl = new URL("/login", process.env.NEXT_PUBLIC_APP_URL!)
+    redirectUrl.searchParams.set("error", error)
+    redirectUrl.searchParams.set("message", errorDescription || "Instagram login was cancelled or failed")
+    return NextResponse.redirect(redirectUrl)
+  }
 
   if (!code) {
-    return NextResponse.json({ error: "No authorization code" }, { status: 400 })
+    console.error("[v0] No authorization code received from Instagram")
+    const redirectUrl = new URL("/login", process.env.NEXT_PUBLIC_APP_URL!)
+    redirectUrl.searchParams.set("error", "no_code")
+    redirectUrl.searchParams.set("message", "No authorization code received")
+    return NextResponse.redirect(redirectUrl)
   }
 
   try {
@@ -77,7 +90,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(redirectUrl)
   } catch (error) {
     console.error("[v0] Instagram callback error:", error)
-    return NextResponse.json({ error: "Authentication failed" }, { status: 500 })
+    const redirectUrl = new URL("/login", process.env.NEXT_PUBLIC_APP_URL!)
+    redirectUrl.searchParams.set("error", "callback_failed")
+    redirectUrl.searchParams.set("message", error instanceof Error ? error.message : "Authentication failed")
+    return NextResponse.redirect(redirectUrl)
   } finally {
     await client.close()
   }

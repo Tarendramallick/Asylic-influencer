@@ -218,12 +218,12 @@ export default function HomePage() {
               <h4 className="font-semibold text-foreground mb-4">Legal</h4>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <Link href="#" className="hover:text-foreground">
+                  <Link href="/privacy" className="hover:text-foreground">
                     Privacy
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-foreground">
+                  <Link href="/terms" className="hover:text-foreground">
                     Terms
                   </Link>
                 </li>

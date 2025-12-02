@@ -1,23 +1,36 @@
 export async function getInstagramAccessToken(code: string) {
   const clientId = process.env.NEXT_PUBLIC_INSTAGRAM_APP_ID
   const clientSecret = process.env.INSTAGRAM_APP_SECRET
-  const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/instagram/callback`
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL
+
+  if (!clientId || !clientSecret || !appUrl) {
+    throw new Error("Missing required Instagram configuration in environment variables")
+  }
+
+  const redirectUri = `${appUrl}/api/auth/instagram/callback`
 
   try {
+    console.log("[v0] Requesting Instagram access token with code:", code.substring(0, 10) + "...")
     const response = await fetch("https://graph.instagram.com/v18.0/oauth/access_token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
-        client_id: clientId!,
-        client_secret: clientSecret!,
+        client_id: clientId,
+        client_secret: clientSecret,
         grant_type: "authorization_code",
         redirect_uri: redirectUri,
         code,
       }).toString(),
     })
 
-    if (!response.ok) throw new Error("Failed to get access token")
     const data = await response.json()
+
+    if (!response.ok) {
+      console.error("[v0] Instagram token error response:", data)
+      throw new Error(data.error?.message || "Failed to get access token")
+    }
+
+    console.log("[v0] Successfully obtained Instagram access token")
     return data.access_token
   } catch (error) {
     console.error("[v0] Instagram token error:", error)
@@ -31,8 +44,15 @@ export async function getInstagramProfile(accessToken: string) {
       `https://graph.instagram.com/v18.0/me?fields=id,username,name,biography,profile_picture_url,followers_count,follows_count,media_count,website&access_token=${accessToken}`,
     )
 
-    if (!response.ok) throw new Error("Failed to fetch profile")
-    return await response.json()
+    const data = await response.json()
+
+    if (!response.ok) {
+      console.error("[v0] Instagram profile error response:", data)
+      throw new Error(data.error?.message || "Failed to fetch profile")
+    }
+
+    console.log("[v0] Successfully fetched Instagram profile:", data.username)
+    return data
   } catch (error) {
     console.error("[v0] Instagram profile error:", error)
     throw error
