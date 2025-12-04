@@ -13,26 +13,34 @@ export async function getInstagramAccessToken(code: string) {
     console.log("[v0] Requesting Instagram access token")
     console.log("[v0] Client ID:", clientId.substring(0, 5) + "...")
     console.log("[v0] Redirect URI:", redirectUri)
+    console.log("[v0] Authorization Code:", code.substring(0, 10) + "...")
+
+    const params = {
+      client_id: clientId,
+      client_secret: clientSecret,
+      grant_type: "authorization_code",
+      redirect_uri: redirectUri,
+      code,
+    }
+
+    console.log("[v0] Request params (sanitized):", {
+      client_id: clientId.substring(0, 5) + "...",
+      grant_type: params.grant_type,
+      redirect_uri: params.redirect_uri,
+    })
 
     const response = await fetch("https://graph.instagram.com/v20.0/oauth/access_token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({
-        client_id: clientId,
-        client_secret: clientSecret,
-        grant_type: "authorization_code",
-        redirect_uri: redirectUri,
-        code,
-      }).toString(),
+      body: new URLSearchParams(params).toString(),
     })
 
     const data = await response.json()
 
     if (!response.ok) {
       console.error("[v0] Instagram token error response:", JSON.stringify(data, null, 2))
-      throw new Error(
-        data.error?.message || `Instagram API Error: ${data.error?.type || "unknown"}` || "Failed to get access token",
-      )
+      const errorMessage = data.error?.message || data.error?.type || "Unknown error"
+      throw new Error(`Instagram OAuth failed: ${errorMessage}`)
     }
 
     console.log("[v0] Successfully obtained Instagram access token")

@@ -8,6 +8,30 @@ const client = new MongoClient(mongoUri)
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
+
+  const verifyToken = searchParams.get("hub.verify_token")
+  const challenge = searchParams.get("hub.challenge")
+
+  if (verifyToken && challenge) {
+    const expectedToken = process.env.INSTAGRAM_WEBHOOK_VERIFY_TOKEN
+
+    if (!expectedToken) {
+      console.error("[v0] INSTAGRAM_WEBHOOK_VERIFY_TOKEN not set in environment variables")
+      return NextResponse.json({ error: "Webhook verify token not configured" }, { status: 500 })
+    }
+
+    if (verifyToken === expectedToken) {
+      console.log("[v0] Webhook verification successful")
+      return new NextResponse(challenge, {
+        status: 200,
+        headers: { "Content-Type": "text/plain" },
+      })
+    } else {
+      console.error("[v0] Webhook verification failed - invalid token")
+      return NextResponse.json({ error: "Invalid verify token" }, { status: 403 })
+    }
+  }
+
   const code = searchParams.get("code")
   const error = searchParams.get("error")
   const errorDescription = searchParams.get("error_description")
@@ -97,4 +121,15 @@ export async function GET(request: NextRequest) {
   } finally {
     await client.close()
   }
+}
+
+export async function POST(request: NextRequest) {
+  const data = await request.json()
+
+  console.log("[v0] Webhook received:", JSON.stringify(data, null, 2))
+
+  // Handle Instagram webhook events here
+  // Examples: media.create, media.caption_edited, etc.
+
+  return NextResponse.json({ success: true })
 }
