@@ -21,7 +21,7 @@ export function GET() {
   }
 
   const redirectUri = `${appUrl}/api/auth/instagram/callback`
-  const scope = "user_profile,instagram_business_basic"
+  const scope = "user_profile"
 
   try {
     const authUrl = new URL("https://api.instagram.com/oauth/authorize")
@@ -30,7 +30,9 @@ export function GET() {
     authUrl.searchParams.set("scope", scope)
     authUrl.searchParams.set("response_type", "code")
 
-    console.log("[v0] Instagram OAuth redirect to:", authUrl.toString().split("?")[0])
+    console.log("[v0] Instagram OAuth redirect URL constructed")
+    console.log("[v0] App URL:", appUrl)
+    console.log("[v0] Redirect URI:", redirectUri)
     return NextResponse.redirect(authUrl.toString())
   } catch (error) {
     console.error("[v0] Instagram auth route error:", error)
