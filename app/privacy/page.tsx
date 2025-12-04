@@ -32,7 +32,7 @@ export default function PrivacyPolicyPage() {
             </CardHeader>
             <CardContent className="space-y-4 text-muted-foreground">
               <p>
-                Asylic.biz ("Company," "we," "us," "our") is committed to protecting your privacy. This Privacy Policy
+                Asylic.in ("Company," "we," "us," "our") is committed to protecting your privacy. This Privacy Policy
                 explains how we collect, use, disclose, and safeguard your information when you visit our website and
                 use our services.
               </p>
@@ -151,7 +151,7 @@ export default function PrivacyPolicyPage() {
                 <li>Data portability (receive your data in a portable format)</li>
               </ul>
               <p className="mt-4">
-                To exercise these rights, please contact us at support@asylic.biz. We will respond within 30 days.
+                To exercise these rights, please contact us at support@asylic.in. We will respond within 30 days.
               </p>
             </CardContent>
           </Card>
@@ -199,9 +199,9 @@ export default function PrivacyPolicyPage() {
             <CardContent className="space-y-4 text-muted-foreground">
               <p>If you have questions about this Privacy Policy or our privacy practices, please contact us at:</p>
               <div className="bg-secondary p-4 rounded-lg mt-4">
-                <p className="font-semibold text-foreground">Asylic.biz</p>
-                <p>Email: support@asylic.biz</p>
-                <p>Website: www.asylic.biz</p>
+                <p className="font-semibold text-foreground">Asylic.in</p>
+                <p>Email: support@asylic.in</p>
+                <p>Website: www.asylic.in</p>
               </div>
             </CardContent>
           </Card>
@@ -225,7 +225,7 @@ export default function PrivacyPolicyPage() {
       {/* Footer */}
       <div className="bg-card border-t border-border mt-16 py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-muted-foreground">
-          <p>&copy; 2025 Asylic.biz. All rights reserved.</p>
+          <p>&copy; 2025 Asylic.in. All rights reserved.</p>
         </div>
       </div>
     </div>

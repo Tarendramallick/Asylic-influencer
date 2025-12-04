@@ -32,7 +32,7 @@ export default function TermsOfServicePage() {
             </CardHeader>
             <CardContent className="space-y-4 text-muted-foreground">
               <p>
-                By accessing and using asylic.biz (the "Service"), you accept and agree to be bound by the terms and
+                By accessing and using Asylic.in (the "Service"), you accept and agree to be bound by the terms and
                 provision of this agreement. If you do not agree to abide by the above, please do not use this service.
               </p>
             </CardContent>
@@ -45,7 +45,7 @@ export default function TermsOfServicePage() {
             </CardHeader>
             <CardContent className="space-y-4 text-muted-foreground">
               <p>
-                You must be at least 18 years of age to use this service. By using asylic.biz, you represent and warrant
+                You must be at least 18 years of age to use this service. By using Asylic.in, you represent and warrant
                 that you are at least 18 years old and have the legal capacity to enter into this agreement.
               </p>
             </CardContent>
@@ -98,7 +98,7 @@ export default function TermsOfServicePage() {
             </CardHeader>
             <CardContent className="space-y-4 text-muted-foreground">
               <p>
-                You retain all ownership rights to content you create and upload to asylic.biz. By uploading content, you
+                You retain all ownership rights to content you create and upload to Asylic.in. By uploading content, you
                 grant us a worldwide, non-exclusive, royalty-free license to use, display, and distribute your content
                 for the purpose of operating and promoting our service.
               </p>
@@ -116,8 +116,8 @@ export default function TermsOfServicePage() {
             </CardHeader>
             <CardContent className="space-y-4 text-muted-foreground">
               <p>
-                All content provided on asylic.biz, including text, graphics, logos, and software, is the property of
-                asylic.biz or our content suppliers and is protected by international copyright laws. You may not
+                All content provided on Asylic.in, including text, graphics, logos, and software, is the property of
+                Asylic.in or our content suppliers and is protected by international copyright laws. You may not
                 reproduce, distribute, or transmit any content without our prior written permission.
               </p>
             </CardContent>
@@ -150,7 +150,7 @@ export default function TermsOfServicePage() {
             <CardContent className="space-y-4 text-muted-foreground">
               <p>
                 Refunds for services may be issued in accordance with the terms of your specific campaign or service
-                agreement. Refund requests must be submitted within 30 days of payment. asylic.biz reserves the right to
+                agreement. Refund requests must be submitted within 30 days of payment. Asylic.in reserves the right to
                 deny refund requests that do not comply with our refund policy.
               </p>
             </CardContent>
@@ -163,7 +163,7 @@ export default function TermsOfServicePage() {
             </CardHeader>
             <CardContent className="space-y-4 text-muted-foreground">
               <p>
-                asylic.biz IS PROVIDED ON AN "AS-IS" AND "AS AVAILABLE" BASIS. WE MAKE NO WARRANTIES, EXPRESS OR IMPLIED,
+                ASYLIC.IN IS PROVIDED ON AN "AS-IS" AND "AS AVAILABLE" BASIS. WE MAKE NO WARRANTIES, EXPRESS OR IMPLIED,
                 REGARDING THE SERVICE, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR
                 NON-INFRINGEMENT.
               </p>
@@ -181,7 +181,7 @@ export default function TermsOfServicePage() {
             </CardHeader>
             <CardContent className="space-y-4 text-muted-foreground">
               <p>
-                IN NO EVENT SHALL asylic.biz BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES
+                IN NO EVENT SHALL ASYLIC.IN BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES
                 ARISING OUT OF OR IN CONNECTION WITH THE SERVICE OR THIS AGREEMENT, EVEN IF ADVISED OF THE POSSIBILITY
                 OF SUCH DAMAGES.
               </p>
@@ -195,7 +195,7 @@ export default function TermsOfServicePage() {
             </CardHeader>
             <CardContent className="space-y-4 text-muted-foreground">
               <p>
-                You agree to indemnify and hold asylic.biz harmless from any claims, damages, losses, or expenses arising
+                You agree to indemnify and hold Asylic.in harmless from any claims, damages, losses, or expenses arising
                 from your use of the service or breach of these terms, including claims by third parties related to your
                 content or conduct.
               </p>
@@ -209,7 +209,7 @@ export default function TermsOfServicePage() {
             </CardHeader>
             <CardContent className="space-y-4 text-muted-foreground">
               <p>
-                asylic.biz may terminate or suspend your account and access to the service immediately, without prior
+                Asylic.in may terminate or suspend your account and access to the service immediately, without prior
                 notice or liability, if you violate any term of this agreement or engage in any conduct that we deem
                 harmful to our service or other users.
               </p>
@@ -251,9 +251,9 @@ export default function TermsOfServicePage() {
             <CardContent className="space-y-4 text-muted-foreground">
               <p>For questions about these Terms of Service, please contact us at:</p>
               <div className="bg-secondary p-4 rounded-lg mt-4">
-                <p className="font-semibold text-foreground">asylic.biz</p>
-                <p>Email: support@asylic.biz</p>
-                <p>Website: www.asylic.biz</p>
+                <p className="font-semibold text-foreground">Asylic.in</p>
+                <p>Email: support@asylic.in</p>
+                <p>Website: www.asylic.in</p>
               </div>
             </CardContent>
           </Card>
@@ -263,7 +263,7 @@ export default function TermsOfServicePage() {
       {/* Footer */}
       <div className="bg-card border-t border-border mt-16 py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-muted-foreground">
-          <p>&copy; 2025 asylic.biz. All rights reserved.</p>
+          <p>&copy; 2025 Asylic.in. All rights reserved.</p>
         </div>
       </div>
     </div>
