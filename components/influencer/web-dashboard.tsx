@@ -16,10 +16,14 @@ export function InfluencerDashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!token) {
-      console.log("[v0] No token available, skipping data fetch")
+    if (!token || !user) {
+      console.log("[v0] Waiting for user data - token:", !!token, "user:", !!user)
+      setLoading(true)
       return
     }
+
+    console.log("[v0] User loaded, fetching dashboard data")
+    setLoading(false)
 
     const fetchData = async () => {
       try {
@@ -56,7 +60,7 @@ export function InfluencerDashboard() {
     }
 
     fetchData()
-  }, [token])
+  }, [token, user])
 
   const performanceData = [
     { month: "Jan", followers: user?.profile?.followers || 42000, engagement: 7.2 },
