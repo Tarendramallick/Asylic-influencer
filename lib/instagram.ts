@@ -7,7 +7,7 @@ export async function getInstagramAccessToken(code: string) {
     throw new Error("Missing required Instagram configuration in environment variables")
   }
 
-  const redirectUri = `${appUrl}/api/auth/instagram/callback`
+  const redirectUri = `${appUrl}/influencer`
 
   try {
     console.log("[v0] Requesting Instagram access token")
