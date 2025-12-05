@@ -1,10 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { MongoClient } from "mongodb"
 import { generateToken } from "@/lib/auth"
-import { getInstagramAccessToken, getInstagramProfile, getInstagramInsights } from "@/lib/instagram"
+import { getInstagramAccessTokenDirect, getInstagramProfile, getInstagramInsights } from "@/lib/instagram"
 
 const mongoUri = process.env.MONGODB_URI!
-const client = new MongoClient(mongoUri)
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
@@ -52,8 +51,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(redirectUrl)
   }
 
+  const client = new MongoClient(mongoUri)
+
   try {
-    const accessToken = await getInstagramAccessToken(code)
+    const accessToken = await getInstagramAccessTokenDirect(code)
     const profile = await getInstagramProfile(accessToken)
     const insights = await getInstagramInsights(profile.id, accessToken)
 
@@ -111,12 +112,16 @@ export async function GET(request: NextRequest) {
     const redirectUrl = new URL("/influencer", process.env.NEXT_PUBLIC_APP_URL!)
     redirectUrl.searchParams.set("token", token)
 
+    console.log("[v0] Instagram authentication successful for user:", user.username)
     return NextResponse.redirect(redirectUrl)
   } catch (error) {
-    console.error("[v0] Instagram callback error:", error)
+    console.error("[v0] Instagram callback error:", error instanceof Error ? error.message : error)
     const redirectUrl = new URL("/login", process.env.NEXT_PUBLIC_APP_URL!)
     redirectUrl.searchParams.set("error", "callback_failed")
-    redirectUrl.searchParams.set("message", error instanceof Error ? error.message : "Authentication failed")
+    redirectUrl.searchParams.set(
+      "message",
+      error instanceof Error ? error.message : "Instagram OAuth failed: Unknown error",
+    )
     return NextResponse.redirect(redirectUrl)
   } finally {
     await client.close()
@@ -135,7 +140,7 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-      const accessToken = await getInstagramAccessToken(code)
+      const accessToken = await getInstagramAccessTokenDirect(code)
       const profile = await getInstagramProfile(accessToken)
 
       const mongoClient = new MongoClient(mongoUri)
