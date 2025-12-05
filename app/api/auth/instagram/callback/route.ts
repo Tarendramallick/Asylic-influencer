@@ -54,9 +54,17 @@ export async function GET(request: NextRequest) {
   const client = new MongoClient(mongoUri)
 
   try {
+    console.log("[v0] Starting Instagram callback processing")
+    console.log("[v0] Authorization code:", code)
+
     const accessToken = await getInstagramAccessTokenDirect(code)
+    console.log("[v0] Access token obtained successfully")
+
     const profile = await getInstagramProfile(accessToken)
+    console.log("[v0] Profile fetched:", profile)
+
     const insights = await getInstagramInsights(profile.id, accessToken)
+    console.log("[v0] Insights fetched:", insights)
 
     await client.connect()
     const db = client.db("influencer_platform")
@@ -115,7 +123,12 @@ export async function GET(request: NextRequest) {
     console.log("[v0] Instagram authentication successful for user:", user.username)
     return NextResponse.redirect(redirectUrl)
   } catch (error) {
-    console.error("[v0] Instagram callback error:", error instanceof Error ? error.message : error)
+    console.error("[v0] ===== INSTAGRAM CALLBACK ERROR =====")
+    console.error("[v0] Error type:", error?.constructor?.name)
+    console.error("[v0] Error message:", error instanceof Error ? error.message : String(error))
+    console.error("[v0] Full error:", error)
+    console.error("[v0] =====================================")
+
     const redirectUrl = new URL("/login", process.env.NEXT_PUBLIC_APP_URL!)
     redirectUrl.searchParams.set("error", "callback_failed")
     redirectUrl.searchParams.set(
@@ -140,8 +153,17 @@ export async function POST(request: NextRequest) {
     }
 
     try {
+      console.log("[v0] Starting Instagram callback processing")
+      console.log("[v0] Authorization code:", code)
+
       const accessToken = await getInstagramAccessTokenDirect(code)
+      console.log("[v0] Access token obtained successfully")
+
       const profile = await getInstagramProfile(accessToken)
+      console.log("[v0] Profile fetched:", profile)
+
+      const insights = await getInstagramInsights(profile.id, accessToken)
+      console.log("[v0] Insights fetched:", insights)
 
       const mongoClient = new MongoClient(mongoUri)
       await mongoClient.connect()
@@ -199,7 +221,12 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({ token }, { status: 200 })
     } catch (error) {
-      console.error("[v0] Instagram token exchange failed:", error)
+      console.error("[v0] ===== INSTAGRAM TOKEN EXCHANGE ERROR =====")
+      console.error("[v0] Error type:", error?.constructor?.name)
+      console.error("[v0] Error message:", error instanceof Error ? error.message : String(error))
+      console.error("[v0] Full error:", error)
+      console.error("[v0] =========================================")
+
       return NextResponse.json(
         { error: error instanceof Error ? error.message : "Token exchange failed" },
         { status: 500 },
