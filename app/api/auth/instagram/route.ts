@@ -20,7 +20,7 @@ export function GET() {
     )
   }
 
-  const redirectUri = `${appUrl}/api/auth/instagram/callback`
+  const redirectUri = `${appUrl}/influencer`
   const scope =
     "instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish,instagram_business_manage_insights"
 
