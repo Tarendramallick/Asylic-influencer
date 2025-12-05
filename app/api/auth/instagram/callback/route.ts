@@ -124,12 +124,84 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const data = await request.json()
+  const contentType = request.headers.get("content-type")
 
-  console.log("[v0] Webhook received:", JSON.stringify(data, null, 2))
+  if (contentType?.includes("application/json")) {
+    const data = await request.json()
+    const code = data.code
 
-  // Handle Instagram webhook events here
-  // Examples: media.create, media.caption_edited, etc.
+    if (!code) {
+      return NextResponse.json({ error: "No authorization code provided" }, { status: 400 })
+    }
 
+    try {
+      const accessToken = await getInstagramAccessToken(code)
+      const profile = await getInstagramProfile(accessToken)
+
+      const mongoClient = new MongoClient(mongoUri)
+      await mongoClient.connect()
+      const db = mongoClient.db("influencer_platform")
+      const usersCollection = db.collection("users")
+
+      let user = await usersCollection.findOne({ instagramId: profile.id })
+
+      if (!user) {
+        const result = await usersCollection.insertOne({
+          instagramId: profile.id,
+          email: `${profile.username}@instagram.local`,
+          username: profile.username,
+          name: profile.name,
+          bio: profile.biography,
+          profilePicture: profile.profile_picture_url,
+          followers: profile.followers_count,
+          following: profile.follows_count,
+          postCount: profile.media_count,
+          website: profile.website || null,
+          instagramAccessToken: accessToken,
+          role: "influencer",
+          verified: false,
+          wallet: {
+            balance: 0,
+            earned: 0,
+            pending: 0,
+          },
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        })
+        user = await usersCollection.findOne({ _id: result.insertedId })
+      } else {
+        await usersCollection.updateOne(
+          { instagramId: profile.id },
+          {
+            $set: {
+              followers: profile.followers_count,
+              following: profile.follows_count,
+              postCount: profile.media_count,
+              instagramAccessToken: accessToken,
+              updatedAt: new Date(),
+            },
+          },
+        )
+      }
+
+      const token = generateToken({
+        userId: user._id.toString(),
+        email: user.email,
+        role: "influencer",
+      })
+
+      await mongoClient.close()
+
+      return NextResponse.json({ token }, { status: 200 })
+    } catch (error) {
+      console.error("[v0] Instagram token exchange failed:", error)
+      return NextResponse.json(
+        { error: error instanceof Error ? error.message : "Token exchange failed" },
+        { status: 500 },
+      )
+    }
+  }
+
+  console.log("[v0] Webhook received")
   return NextResponse.json({ success: true })
 }
