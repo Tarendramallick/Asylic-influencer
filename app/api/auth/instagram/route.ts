@@ -20,7 +20,7 @@ export function GET() {
     )
   }
 
-  const redirectUri = `${appUrl}/influencer`
+  const redirectUri = `${appUrl}/api/auth/instagram/callback`
   const scope =
     "instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish,instagram_business_manage_insights"
 
@@ -34,6 +34,8 @@ export function GET() {
     console.log("[v0] Instagram OAuth redirect URL constructed")
     console.log("[v0] App URL:", appUrl)
     console.log("[v0] Redirect URI:", redirectUri)
+    console.log("[v0] Client ID:", clientId ? clientId.substring(0, 10) + "..." : "MISSING")
+    console.log("[v0] Full auth URL:", authUrl.toString())
     return NextResponse.redirect(authUrl.toString())
   } catch (error) {
     console.error("[v0] Instagram auth route error:", error)
