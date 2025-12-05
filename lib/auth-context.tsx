@@ -30,6 +30,8 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>
   register: (name: string, email: string, password: string, role: "influencer" | "brand") => Promise<void>
   logout: () => void
+  setToken: (token: string | null) => void
+  setUser: (user: User | null) => void
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -125,8 +127,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.push("/")
   }
 
+  const setTokenFn = (newToken: string | null) => {
+    setToken(newToken)
+    if (newToken) {
+      localStorage.setItem("auth_token", newToken)
+      // Fetch user data when token is set
+      fetchUserFromToken(newToken)
+    }
+  }
+
+  const setUserFn = (newUser: User | null) => {
+    setUser(newUser)
+    if (newUser) {
+      localStorage.setItem("auth_user", JSON.stringify(newUser))
+    }
+  }
+
+  const fetchUserFromToken = async (token: string) => {
+    try {
+      const response = await fetch("/api/user/profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (response.ok) {
+        const userData = await response.json()
+        setUser(userData)
+        localStorage.setItem("auth_user", JSON.stringify(userData))
+      }
+    } catch (error) {
+      console.error("[v0] Failed to fetch user from token:", error)
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider
+      value={{ user, token, loading, login, register, logout, setToken: setTokenFn, setUser: setUserFn }}
+    >
+      {children}
+    </AuthContext.Provider>
   )
 }
 

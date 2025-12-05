@@ -16,10 +16,14 @@ export function InfluencerDashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!token) return
+    if (!token) {
+      console.log("[v0] No token available, skipping data fetch")
+      return
+    }
 
     const fetchData = async () => {
       try {
+        console.log("[v0] Fetching dashboard data with token")
         const [earningsRes, campaignsRes] = await Promise.all([
           fetch("/api/earnings", {
             headers: { Authorization: `Bearer ${token}` },
@@ -31,12 +35,18 @@ export function InfluencerDashboard() {
 
         if (earningsRes.ok) {
           const earningsData = await earningsRes.json()
+          console.log("[v0] Earnings fetched:", earningsData)
           setEarnings(earningsData)
+        } else {
+          console.error("[v0] Earnings fetch failed:", earningsRes.status)
         }
 
         if (campaignsRes.ok) {
           const campaignsData = await campaignsRes.json()
-          setCampaigns(campaignsData.slice(0, 2))
+          console.log("[v0] Campaigns fetched:", campaignsData.length, "items")
+          setCampaigns(Array.isArray(campaignsData) ? campaignsData.slice(0, 2) : [])
+        } else {
+          console.error("[v0] Campaigns fetch failed:", campaignsRes.status)
         }
       } catch (error) {
         console.error("[v0] Error fetching dashboard data:", error)
