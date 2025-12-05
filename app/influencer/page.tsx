@@ -1,4 +1,4 @@
-import { InfluencerDashboard } from "@/components/influencer/web-dashboard"
+import InfluencerDashboardClient from "@/app/influencer/client"
 
 export const metadata = {
   title: "Dashboard - Influencer",
@@ -6,5 +6,5 @@ export const metadata = {
 }
 
 export default function DashboardPage() {
-  return <InfluencerDashboard />
+  return <InfluencerDashboardClient />
 }

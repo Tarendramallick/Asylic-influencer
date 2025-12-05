@@ -21,10 +21,11 @@ export function GET() {
   }
 
   const redirectUri = `${appUrl}/api/auth/instagram/callback`
-  const scope = "user_profile"
+  const scope =
+    "instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish,instagram_business_manage_insights"
 
   try {
-    const authUrl = new URL("https://api.instagram.com/oauth/authorize")
+    const authUrl = new URL("https://www.instagram.com/oauth/authorize")
     authUrl.searchParams.set("client_id", clientId)
     authUrl.searchParams.set("redirect_uri", redirectUri)
     authUrl.searchParams.set("scope", scope)
