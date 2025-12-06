@@ -8,7 +8,7 @@ import { InfluencerDashboard } from "@/components/influencer/web-dashboard"
 export default function InfluencerDashboardClient() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  const { setToken, token, user } = useAuth()
+  const { setToken, token, user, loading } = useAuth()
 
   useEffect(() => {
     const code = searchParams.get("code")
@@ -17,7 +17,6 @@ export default function InfluencerDashboardClient() {
     // If there's a token in URL (from our auth endpoint), use it
     if (tokenFromUrl) {
       setToken(tokenFromUrl)
-      router.replace("/influencer")
       return
     }
 
@@ -36,13 +35,14 @@ export default function InfluencerDashboardClient() {
             const data = await response.json()
             console.log("[v0] Token received:", data.token)
             setToken(data.token)
-            router.replace("/influencer")
           } else {
             const error = await response.json()
             console.error("[v0] Token exchange failed:", error)
+            router.replace("/login")
           }
         } catch (error) {
           console.error("[v0] Error exchanging code:", error)
+          router.replace("/login")
         }
       }
 
@@ -51,10 +51,10 @@ export default function InfluencerDashboardClient() {
   }, [searchParams, router, setToken])
 
   useEffect(() => {
-    if (!user) {
+    if (!loading && !token && !searchParams.get("code") && !searchParams.get("token")) {
       router.replace("/login")
     }
-  }, [user, router])
+  }, [token, router, loading, searchParams])
 
   return <InfluencerDashboard />
 }
