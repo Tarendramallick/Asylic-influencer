@@ -51,11 +51,17 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(redirectUrl)
   }
 
+  if (!process.env.NEXT_PUBLIC_APP_URL) {
+    console.error("[v0] NEXT_PUBLIC_APP_URL is not configured")
+    return NextResponse.json({ error: "Server configuration error: NEXT_PUBLIC_APP_URL not set" }, { status: 500 })
+  }
+
   const client = new MongoClient(mongoUri)
 
   try {
     console.log("[v0] Starting Instagram callback processing")
     console.log("[v0] Authorization code:", code)
+    console.log("[v0] App URL:", process.env.NEXT_PUBLIC_APP_URL)
 
     const accessToken = await getInstagramAccessTokenDirect(code)
     console.log("[v0] Access token obtained successfully")
@@ -127,9 +133,10 @@ export async function GET(request: NextRequest) {
     console.error("[v0] Error type:", error?.constructor?.name)
     console.error("[v0] Error message:", error instanceof Error ? error.message : String(error))
     console.error("[v0] Full error:", error)
+    console.error("[v0] Stack trace:", error instanceof Error ? error.stack : "N/A")
     console.error("[v0] =====================================")
 
-    const redirectUrl = new URL("/login", process.env.NEXT_PUBLIC_APP_URL!)
+    const redirectUrl = new URL("/login", process.env.NEXT_PUBLIC_APP_URL || "https://www.asylic.biz")
     redirectUrl.searchParams.set("error", "callback_failed")
     redirectUrl.searchParams.set(
       "message",
