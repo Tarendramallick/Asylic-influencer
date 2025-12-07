@@ -17,6 +17,7 @@ export default function InfluencerDashboardClient() {
     // If there's a token in URL (from our auth endpoint), use it
     if (tokenFromUrl) {
       setToken(tokenFromUrl)
+      router.replace("/influencer")
       return
     }
 
@@ -51,10 +52,10 @@ export default function InfluencerDashboardClient() {
   }, [searchParams, router, setToken])
 
   useEffect(() => {
-    if (!loading && !token && !searchParams.get("code") && !searchParams.get("token")) {
+    if (!loading && !user && !searchParams.get("code")) {
       router.replace("/login")
     }
-  }, [token, router, loading, searchParams])
+  }, [user, router, loading, searchParams])
 
   return <InfluencerDashboard />
 }
