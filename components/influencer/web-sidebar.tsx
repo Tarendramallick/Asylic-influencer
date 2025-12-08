@@ -1,9 +1,10 @@
 "use client"
 
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import Link from "next/link"
 import { Home, Compass, Upload, Wallet, User, LogOut } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useAuth } from "@/lib/auth-context"
 
 interface InfluencerSidebarProps {
   className?: string
@@ -11,6 +12,8 @@ interface InfluencerSidebarProps {
 
 export function InfluencerSidebar({ className }: InfluencerSidebarProps) {
   const pathname = usePathname()
+  const router = useRouter()
+  const { logout } = useAuth()
 
   const navItems = [
     {
@@ -45,9 +48,13 @@ export function InfluencerSidebar({ className }: InfluencerSidebarProps) {
     },
   ]
 
+  const handleLogout = () => {
+    logout()
+    router.push("/")
+  }
+
   return (
     <div className={cn("w-64 bg-sidebar border-r border-sidebar-border p-6 flex flex-col", className)}>
-      {/* Logo */}
       <div className="flex items-center gap-2 mb-8">
         <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold">
           I
@@ -55,7 +62,6 @@ export function InfluencerSidebar({ className }: InfluencerSidebarProps) {
         <span className="font-semibold text-sidebar-foreground">Creator Hub</span>
       </div>
 
-      {/* Navigation */}
       <nav className="flex-1 space-y-2">
         {navItems.map((item) => (
           <Link
@@ -74,8 +80,10 @@ export function InfluencerSidebar({ className }: InfluencerSidebarProps) {
         ))}
       </nav>
 
-      {/* Logout */}
-      <button className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent transition-colors w-full">
+      <button
+        onClick={handleLogout}
+        className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent transition-colors w-full"
+      >
         <LogOut className="w-5 h-5" />
         <span className="font-medium">Logout</span>
       </button>

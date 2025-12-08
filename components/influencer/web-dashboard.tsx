@@ -22,8 +22,10 @@ export function InfluencerDashboard() {
       return
     }
 
-    console.log("[v0] User loaded, fetching dashboard data")
-    setLoading(false)
+    console.log("[v0] User loaded with Instagram data:", {
+      followers: user.profile?.followers,
+      engagement: user.profile?.engagementRate,
+    })
 
     const fetchData = async () => {
       try {
@@ -41,16 +43,12 @@ export function InfluencerDashboard() {
           const earningsData = await earningsRes.json()
           console.log("[v0] Earnings fetched:", earningsData)
           setEarnings(earningsData)
-        } else {
-          console.error("[v0] Earnings fetch failed:", earningsRes.status)
         }
 
         if (campaignsRes.ok) {
           const campaignsData = await campaignsRes.json()
-          console.log("[v0] Campaigns fetched:", campaignsData.length, "items")
+          console.log("[v0] Campaigns fetched:", campaignsData.length)
           setCampaigns(Array.isArray(campaignsData) ? campaignsData.slice(0, 2) : [])
-        } else {
-          console.error("[v0] Campaigns fetch failed:", campaignsRes.status)
         }
       } catch (error) {
         console.error("[v0] Error fetching dashboard data:", error)
@@ -63,12 +61,24 @@ export function InfluencerDashboard() {
   }, [token, user])
 
   const performanceData = [
-    { month: "Jan", followers: user?.profile?.followers || 42000, engagement: 7.2 },
-    { month: "Feb", followers: (user?.profile?.followers || 42000) + 1500, engagement: 7.8 },
-    { month: "Mar", followers: user?.profile?.followers || 45200, engagement: user?.profile?.engagementRate || 8.4 },
+    {
+      month: "Jan",
+      followers: (user?.followers || 0) - 2500,
+      engagement: (user?.profile?.engagementRate || 0) - 1.2,
+    },
+    {
+      month: "Feb",
+      followers: (user?.followers || 0) - 1200,
+      engagement: (user?.profile?.engagementRate || 0) - 0.5,
+    },
+    {
+      month: "Mar",
+      followers: user?.followers || 0,
+      engagement: user?.profile?.engagementRate || 0,
+    },
   ]
 
-  if (loading) {
+  if (loading || !user?.profile) {
     return (
       <div className="space-y-6">
         <Skeleton className="h-12 w-64" />
@@ -84,8 +94,8 @@ export function InfluencerDashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-foreground">Welcome back, {user?.name}!</h1>
-        <p className="text-muted-foreground mt-1">Keep crushing those campaigns</p>
+        <h1 className="text-3xl font-bold text-foreground">Welcome back, {user.name}!</h1>
+        <p className="text-muted-foreground mt-1">@{user.username} • Keep crushing those campaigns</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -95,30 +105,30 @@ export function InfluencerDashboard() {
             <TrendingUp className="w-4 h-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{(user?.profile?.followers || 0).toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">+2.5% this week</p>
+            <div className="text-2xl font-bold">{user.followers?.toLocaleString() || "—"}</div>
+            <p className="text-xs text-muted-foreground">Instagram followers</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Engagement</CardTitle>
+            <CardTitle className="text-sm font-medium">Engagement Rate</CardTitle>
             <Target className="w-4 h-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{user?.profile?.engagementRate || 0}%</div>
-            <p className="text-xs text-muted-foreground">Avg. engagement rate</p>
+            <div className="text-2xl font-bold">{user.profile.engagementRate?.toFixed(2) || "—"}%</div>
+            <p className="text-xs text-muted-foreground">Based on recent posts</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg. Reach</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Posts</CardTitle>
             <Target className="w-4 h-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">38K</div>
-            <p className="text-xs text-muted-foreground">Per post</p>
+            <div className="text-2xl font-bold">{user.postCount?.toLocaleString() || "—"}</div>
+            <p className="text-xs text-muted-foreground">Published on Instagram</p>
           </CardContent>
         </Card>
 
@@ -173,6 +183,10 @@ export function InfluencerDashboard() {
               <div className="flex justify-between">
                 <span>Total Earned</span>
                 <span className="font-semibold">₹{(earnings?.totalEarned || 0).toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Following</span>
+                <span className="font-semibold">{user.following?.toLocaleString() || "—"}</span>
               </div>
             </div>
             <Button className="w-full mt-6 bg-white text-primary hover:bg-gray-100">Withdraw Funds</Button>
