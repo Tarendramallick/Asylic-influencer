@@ -16,13 +16,15 @@ export default function LoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const roleParam = searchParams.get("role")
-  const { login } = useAuth()
+  const { login, setToken } = useAuth()
   const { toast } = useToast()
 
   const [role, setRole] = useState<string>(roleParam || "")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
+  const [testAccessToken, setTestAccessToken] = useState("")
+  const [showTestTokenForm, setShowTestTokenForm] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -44,6 +46,40 @@ export default function LoginPage() {
 
   const handleInstagramLogin = () => {
     window.location.href = "/api/auth/instagram"
+  }
+
+  const handleTestUserLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+
+    try {
+      const response = await fetch("/api/auth/instagram/test", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ accessToken: testAccessToken }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || "Test user login failed")
+      }
+
+      const data = await response.json()
+      setToken(data.token)
+      toast({
+        title: "Success",
+        description: `Welcome ${data.user.username}! (Test User)`,
+      })
+      router.push("/influencer")
+    } catch (error) {
+      toast({
+        title: "Test user login failed",
+        description: error instanceof Error ? error.message : "Invalid access token",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   if (!role) {
@@ -96,14 +132,58 @@ export default function LoginPage() {
 
         <CardContent className="space-y-6">
           {role === "influencer" && (
-            <Button
-              onClick={handleInstagramLogin}
-              disabled={isLoading}
-              className="w-full h-12 bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90"
-            >
-              <Instagram className="w-5 h-5 mr-2" />
-              Continue with Instagram
-            </Button>
+            <>
+              <Button
+                onClick={handleInstagramLogin}
+                disabled={isLoading}
+                className="w-full h-12 bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90"
+              >
+                <Instagram className="w-5 h-5 mr-2" />
+                Continue with Instagram
+              </Button>
+
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-border" />
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-background text-muted-foreground">Test User</span>
+                </div>
+              </div>
+
+              <div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowTestTokenForm(!showTestTokenForm)}
+                  className="w-full"
+                >
+                  {showTestTokenForm ? "Hide Test Login" : "Login with Test Token"}
+                </Button>
+
+                {showTestTokenForm && (
+                  <form onSubmit={handleTestUserLogin} className="mt-4 space-y-3">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-foreground">Instagram Access Token</label>
+                      <textarea
+                        placeholder="Paste your test Instagram access token here"
+                        value={testAccessToken}
+                        onChange={(e) => setTestAccessToken(e.target.value)}
+                        required
+                        className="w-full px-3 py-2 text-sm border border-input rounded-md bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                        rows={3}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        This is for testing only. Use your Instagram test app access token.
+                      </p>
+                    </div>
+                    <Button type="submit" disabled={isLoading} className="w-full h-10">
+                      {isLoading ? "Logging in..." : "Login as Test User"}
+                    </Button>
+                  </form>
+                )}
+              </div>
+            </>
           )}
 
           <div className="relative">

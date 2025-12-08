@@ -11,7 +11,6 @@ export async function getInstagramAccessTokenDirect(code: string) {
 
   try {
     console.log("[v0] Exchanging Instagram authorization code for access token")
-    console.log("[v0] Token exchange params - clientId:", clientId, "redirectUri:", redirectUri)
 
     const params = {
       client_id: clientId,
@@ -30,9 +29,7 @@ export async function getInstagramAccessTokenDirect(code: string) {
     const data = await response.json()
 
     if (!response.ok) {
-      console.error("[v0] Instagram token error response:")
-      console.error("[v0] Status:", response.status)
-      console.error("[v0] Full response:", JSON.stringify(data, null, 2))
+      console.error("[v0] Instagram token error:", JSON.stringify(data, null, 2))
       const errorMessage = data.error?.message || data.error?.type || "Token exchange failed"
       throw new Error(`Instagram OAuth failed: ${errorMessage}`)
     }
