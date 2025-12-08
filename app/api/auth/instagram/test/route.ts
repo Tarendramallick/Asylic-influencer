@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { MongoClient } from "mongodb"
 import { generateToken } from "@/lib/auth"
-import { getInstagramProfile, getInstagramInsights } from "@/lib/instagram"
+import { getInstagramProfile } from "@/lib/instagram"
 
 const mongoUri = process.env.MONGODB_URI!
 
@@ -20,8 +20,7 @@ export async function POST(request: NextRequest) {
     const profile = await getInstagramProfile(accessToken)
     console.log("[v0] Profile fetched:", profile)
 
-    const insights = await getInstagramInsights(profile.id, accessToken)
-    console.log("[v0] Insights fetched:", insights)
+    // Only fetch insights if needed for display; skip error handling for now
 
     await client.connect()
     const db = client.db("influencer_platform")
@@ -68,6 +67,7 @@ export async function POST(request: NextRequest) {
           },
         },
       )
+      user = await usersCollection.findOne({ instagramId: profile.id })
     }
 
     const token = generateToken({
