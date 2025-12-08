@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { MongoClient } from "mongodb"
 import { generateToken } from "@/lib/auth"
-import { getInstagramProfile } from "@/lib/instagram"
+import { getInstagramProfile, getInstagramMedia } from "@/lib/instagram"
 
 const mongoUri = process.env.MONGODB_URI!
 
@@ -20,7 +20,24 @@ export async function POST(request: NextRequest) {
     const profile = await getInstagramProfile(accessToken)
     console.log("[v0] Profile fetched:", profile)
 
-    // Only fetch insights if needed for display; skip error handling for now
+    let media = { data: [] }
+    try {
+      media = await getInstagramMedia(accessToken)
+      console.log("[v0] Media fetched:", media.data?.length || 0, "posts")
+    } catch (mediaError) {
+      console.warn("[v0] Could not fetch media:", mediaError)
+    }
+
+    let engagementRate = 0
+    if (media.data && media.data.length > 0) {
+      const totalEngagement = media.data.reduce(
+        (sum: number, post: any) => sum + (post.like_count || 0) + (post.comments_count || 0),
+        0,
+      )
+      engagementRate = Number.parseFloat(
+        ((totalEngagement / media.data.length / profile.followers_count) * 100).toFixed(2),
+      )
+    }
 
     await client.connect()
     const db = client.db("influencer_platform")
@@ -44,6 +61,13 @@ export async function POST(request: NextRequest) {
         role: "influencer",
         verified: false,
         isTestUser: true,
+        profile: {
+          bio: profile.biography,
+          avatar: profile.profile_picture_url,
+          followers: profile.followers_count,
+          engagementRate: engagementRate,
+          niche: "General",
+        },
         wallet: {
           balance: 0,
           earned: 0,
@@ -62,6 +86,10 @@ export async function POST(request: NextRequest) {
             following: profile.follows_count,
             postCount: profile.media_count,
             instagramAccessToken: accessToken,
+            "profile.followers": profile.followers_count,
+            "profile.engagementRate": engagementRate,
+            "profile.avatar": profile.profile_picture_url,
+            "profile.bio": profile.biography,
             isTestUser: true,
             updatedAt: new Date(),
           },
