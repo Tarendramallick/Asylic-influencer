@@ -1,4 +1,3 @@
-
 # Production Deployment Checklist
 
 ## Pre-Deployment

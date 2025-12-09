@@ -5,60 +5,94 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { TrendingUp, Target, Wallet } from "lucide-react"
+import { TrendingUp, Target, Wallet, RefreshCw } from "lucide-react"
 import { useAuth } from "@/lib/auth-context"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useToast } from "@/hooks/use-toast"
 
 export function InfluencerDashboard() {
-  const { user, token } = useAuth()
+  const { user, token, setUser } = useAuth()
+  const { toast } = useToast()
   const [earnings, setEarnings] = useState<any>(null)
   const [campaigns, setCampaigns] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [syncing, setSyncing] = useState(false)
 
   useEffect(() => {
     if (!token || !user) {
-      console.log("[v0] Waiting for user data - token:", !!token, "user:", !!user)
       setLoading(true)
       return
     }
 
-    console.log("[v0] User loaded with Instagram data:", {
-      followers: user.profile?.followers,
-      engagement: user.profile?.engagementRate,
-    })
-
-    const fetchData = async () => {
-      try {
-        console.log("[v0] Fetching dashboard data with token")
-        const [earningsRes, campaignsRes] = await Promise.all([
-          fetch("/api/earnings", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          fetch("/api/campaigns", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-        ])
-
-        if (earningsRes.ok) {
-          const earningsData = await earningsRes.json()
-          console.log("[v0] Earnings fetched:", earningsData)
-          setEarnings(earningsData)
-        }
-
-        if (campaignsRes.ok) {
-          const campaignsData = await campaignsRes.json()
-          console.log("[v0] Campaigns fetched:", campaignsData.length)
-          setCampaigns(Array.isArray(campaignsData) ? campaignsData.slice(0, 2) : [])
-        }
-      } catch (error) {
-        console.error("[v0] Error fetching dashboard data:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
     fetchData()
+
+    // Auto-sync Instagram data every 5 minutes
+    const syncInterval = setInterval(syncInstagramData, 5 * 60 * 1000)
+
+    return () => clearInterval(syncInterval)
   }, [token, user])
+
+  const fetchData = async () => {
+    try {
+      const [earningsRes, campaignsRes] = await Promise.all([
+        fetch("/api/earnings", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        fetch("/api/campaigns", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ])
+
+      if (earningsRes.ok) {
+        const earningsData = await earningsRes.json()
+        setEarnings(earningsData)
+      }
+
+      if (campaignsRes.ok) {
+        const campaignsData = await campaignsRes.json()
+        setCampaigns(Array.isArray(campaignsData) ? campaignsData.slice(0, 2) : [])
+      }
+    } catch (error) {
+      console.error("[v0] Error fetching dashboard data:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const syncInstagramData = async () => {
+    if (!token || syncing) return
+
+    setSyncing(true)
+    try {
+      const response = await fetch("/api/user/sync-instagram", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        // Update user context with fresh data
+        if (setUser && data.profile) {
+          setUser((prev: any) => ({
+            ...prev,
+            ...data.profile,
+            profile: {
+              ...prev.profile,
+              engagementRate: data.profile.engagementRate,
+            },
+          }))
+        }
+        toast({
+          title: "Instagram data synced",
+          description: "Your profile has been updated with the latest data",
+        })
+      }
+    } catch (error) {
+      console.error("[v0] Error syncing Instagram:", error)
+    } finally {
+      setSyncing(false)
+    }
+  }
 
   const performanceData = [
     {
@@ -93,9 +127,15 @@ export function InfluencerDashboard() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-foreground">Welcome back, {user.name}!</h1>
-        <p className="text-muted-foreground mt-1">@{user.username} • Keep crushing those campaigns</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">Welcome back, {user.name}!</h1>
+          <p className="text-muted-foreground mt-1">@{user.username} • Keep crushing those campaigns</p>
+        </div>
+        <Button variant="outline" size="sm" onClick={syncInstagramData} disabled={syncing}>
+          <RefreshCw className={`w-4 h-4 mr-2 ${syncing ? "animate-spin" : ""}`} />
+          Sync Instagram
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

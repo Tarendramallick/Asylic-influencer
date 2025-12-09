@@ -1,18 +1,14 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { TrendingUp, Clock, Building2, Zap } from "lucide-react"
-
-const transactionHistory = [
-  { id: 1, campaign: "Nike Summer", amount: 12000, status: "paid", date: "2025-01-15" },
-  { id: 2, campaign: "TravelGear Pro", amount: 15000, status: "pending", date: "2025-01-10" },
-  { id: 3, campaign: "Apple Tech", amount: 20000, status: "approved", date: "2025-01-05" },
-  { id: 4, campaign: "Starbucks Campaign", amount: 8500, status: "paid", date: "2024-12-28" },
-]
+import { useAuth } from "@/lib/auth-context"
+import { Skeleton } from "@/components/ui/skeleton"
+import { useToast } from "@/hooks/use-toast"
 
 const payoutMethods = [
   { icon: Building2, name: "Bank Transfer", desc: "Direct to your bank account" },
@@ -20,12 +16,67 @@ const payoutMethods = [
 ]
 
 export function EarningsPage() {
+  const { token } = useAuth()
+  const { toast } = useToast()
   const [transactionFilter, setTransactionFilter] = useState("All")
+  const [transactions, setTransactions] = useState<any[]>([])
+  const [earnings, setEarnings] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!token) return
+    fetchData()
+  }, [token])
+
+  const fetchData = async () => {
+    try {
+      const [earningsRes, payoutsRes] = await Promise.all([
+        fetch("/api/earnings", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        fetch("/api/payouts/history", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ])
+
+      if (earningsRes.ok) {
+        const earningsData = await earningsRes.json()
+        setEarnings(earningsData)
+      }
+
+      if (payoutsRes.ok) {
+        const payoutsData = await payoutsRes.json()
+        setTransactions(payoutsData)
+      }
+    } catch (error) {
+      console.error("[v0] Error fetching earnings:", error)
+      toast({
+        title: "Error",
+        description: "Failed to load earnings data",
+        variant: "destructive",
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const filtered =
     transactionFilter === "All"
-      ? transactionHistory
-      : transactionHistory.filter((t) => t.status === transactionFilter.toLowerCase())
+      ? transactions
+      : transactions.filter((t) => t.status === transactionFilter.toLowerCase())
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-12 w-64" />
+        <Skeleton className="h-48" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Skeleton className="h-32" />
+          <Skeleton className="h-32" />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -40,15 +91,15 @@ export function EarningsPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <p className="text-sm opacity-90">Available to withdraw</p>
-              <p className="text-3xl font-bold mt-2">₹45,250</p>
+              <p className="text-3xl font-bold mt-2">₹{(earnings?.balance || 0).toLocaleString()}</p>
             </div>
             <div>
               <p className="text-sm opacity-90">Total Earned</p>
-              <p className="text-3xl font-bold mt-2">₹187,500</p>
+              <p className="text-3xl font-bold mt-2">₹{(earnings?.totalEarned || 0).toLocaleString()}</p>
             </div>
             <div>
               <p className="text-sm opacity-90">Pending</p>
-              <p className="text-3xl font-bold mt-2">₹28,000</p>
+              <p className="text-3xl font-bold mt-2">₹{(earnings?.pending || 0).toLocaleString()}</p>
             </div>
           </div>
         </CardContent>
@@ -62,8 +113,10 @@ export function EarningsPage() {
             <TrendingUp className="w-4 h-4 text-accent" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₹187,500</div>
-            <p className="text-xs text-muted-foreground">12 campaigns completed</p>
+            <div className="text-2xl font-bold">₹{(earnings?.totalEarned || 0).toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">
+              {transactions.filter((t) => t.status === "paid").length} campaigns completed
+            </p>
           </CardContent>
         </Card>
 
@@ -73,15 +126,15 @@ export function EarningsPage() {
             <Clock className="w-4 h-4 text-amber-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₹28,000</div>
+            <div className="text-2xl font-bold">₹{(earnings?.pending || 0).toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">Awaiting approval</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Request Payout */}
-      <Button size="lg" className="w-full">
-        Request Payout
+      <Button size="lg" className="w-full" disabled={!earnings?.balance || earnings.balance < 1000}>
+        Request Payout {earnings?.balance < 1000 && "(Minimum ₹1,000)"}
       </Button>
 
       {/* Supported Methods */}
@@ -127,36 +180,40 @@ export function EarningsPage() {
             ))}
           </div>
 
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Campaign</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Date</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtered.map((tx) => (
-                  <TableRow key={tx.id}>
-                    <TableCell className="font-medium">{tx.campaign}</TableCell>
-                    <TableCell>₹{tx.amount}</TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={tx.status === "paid" ? "default" : tx.status === "pending" ? "secondary" : "outline"}
-                      >
-                        {tx.status.charAt(0).toUpperCase() + tx.status.slice(1)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {new Date(tx.date).toLocaleDateString()}
-                    </TableCell>
+          {filtered.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">No transactions found</div>
+          ) : (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Campaign</TableHead>
+                    <TableHead>Amount</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Date</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                </TableHeader>
+                <TableBody>
+                  {filtered.map((tx) => (
+                    <TableRow key={tx._id}>
+                      <TableCell className="font-medium">{tx.campaignName || tx.description || "Campaign"}</TableCell>
+                      <TableCell>₹{tx.amount.toLocaleString()}</TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={tx.status === "paid" ? "default" : tx.status === "pending" ? "secondary" : "outline"}
+                        >
+                          {tx.status.charAt(0).toUpperCase() + tx.status.slice(1)}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-sm text-muted-foreground">
+                        {new Date(tx.createdAt).toLocaleDateString()}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
