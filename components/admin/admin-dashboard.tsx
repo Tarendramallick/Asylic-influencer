@@ -1,7 +1,7 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import {
   ChartContainer,
   ChartLegend,
@@ -12,31 +12,53 @@ import {
 import { cn } from "@/lib/utils"
 import { Users2, Megaphone, CheckCircle2 } from "lucide-react"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts"
-
-const kpis = [
-  { label: "Total Campaigns", value: "1,245", icon: Megaphone },
-  { label: "Total Influencers", value: "15,870", icon: Users2 },
-  { label: "Active Clients", value: "322", icon: Users2 },
-  { label: "Pending Verifications", value: "34", icon: CheckCircle2 },
-]
-
-const revenueData = [
-  { month: "Jan", Revenue: 520 },
-  { month: "Feb", Revenue: 610 },
-  { month: "Mar", Revenue: 700 },
-  { month: "Apr", Revenue: 640 },
-  { month: "May", Revenue: 780 },
-  { month: "Jun", Revenue: 820 },
-]
-
-const approvals = [
-  { id: "REQ-1941", type: "Content Review", owner: "Acme Co.", status: "Pending" },
-  { id: "REQ-1942", type: "Payment Release", owner: "Nova Labs", status: "Pending" },
-  { id: "REQ-1943", type: "Creator Onboarding", owner: "GreenLeaf", status: "Escalated" },
-  { id: "REQ-1944", type: "Ad Copy Check", owner: "Acme Co.", status: "Pending" },
-]
+import { Skeleton } from "@/components/ui/skeleton"
 
 export function AdminDashboard({ className }: { className?: string }) {
+  const [stats, setStats] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchStats()
+  }, [])
+
+  const fetchStats = async () => {
+    try {
+      const token = localStorage.getItem("token")
+      const response = await fetch("/api/admin/stats", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setStats(data)
+      }
+    } catch (error) {
+      console.error("[v0] Error fetching admin stats:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="grid gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {[...Array(4)].map((_, i) => (
+            <Skeleton key={i} className="h-32" />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  const kpis = [
+    { label: "Total Campaigns", value: stats?.totalCampaigns?.toLocaleString() || "0", icon: Megaphone },
+    { label: "Total Influencers", value: stats?.totalInfluencers?.toLocaleString() || "0", icon: Users2 },
+    { label: "Active Clients", value: stats?.totalClients?.toLocaleString() || "0", icon: Users2 },
+    { label: "Pending Verifications", value: stats?.pendingVerifications?.toLocaleString() || "0", icon: CheckCircle2 },
+  ]
+
   return (
     <div className={cn("grid gap-4", className)}>
       {/* KPIs */}
@@ -68,7 +90,7 @@ export function AdminDashboard({ className }: { className?: string }) {
             className="aspect-[16/6] w-full"
           >
             <ResponsiveContainer>
-              <BarChart data={revenueData} margin={{ left: 12, right: 12 }}>
+              <BarChart data={stats?.revenueData || []} margin={{ left: 12, right: 12 }}>
                 <CartesianGrid strokeDasharray="4 4" />
                 <XAxis dataKey="month" />
                 <YAxis />
@@ -78,37 +100,6 @@ export function AdminDashboard({ className }: { className?: string }) {
               </BarChart>
             </ResponsiveContainer>
           </ChartContainer>
-        </CardContent>
-      </Card>
-
-      {/* Approvals Queue */}
-      <Card>
-        <CardHeader className="border-b py-4">
-          <CardTitle>Approvals Queue</CardTitle>
-          <CardDescription>Items requiring admin attention</CardDescription>
-        </CardHeader>
-        <CardContent className="py-2">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Request ID</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Client</TableHead>
-                <TableHead>Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {approvals.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell>{row.id}</TableCell>
-                  <TableCell>{row.type}</TableCell>
-                  <TableCell>{row.owner}</TableCell>
-                  <TableCell>{row.status}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-            <TableCaption>Showing 4 of 18 pending approvals</TableCaption>
-          </Table>
         </CardContent>
       </Card>
     </div>
