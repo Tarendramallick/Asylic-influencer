@@ -24,7 +24,7 @@ export function AdminDashboard({ className }: { className?: string }) {
 
   const fetchStats = async () => {
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("auth_token")
       const response = await fetch("/api/admin/stats", {
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -87,9 +87,9 @@ export function AdminDashboard({ className }: { className?: string }) {
             config={{
               Revenue: { label: "Revenue", color: "var(--color-chart-3)" },
             }}
-            className="aspect-[16/6] w-full"
+            className="h-[300px] w-full"
           >
-            <ResponsiveContainer>
+            <ResponsiveContainer width="100%" height="100%">
               <BarChart data={stats?.revenueData || []} margin={{ left: 12, right: 12 }}>
                 <CartesianGrid strokeDasharray="4 4" />
                 <XAxis dataKey="month" />
