@@ -47,9 +47,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const savedToken = localStorage.getItem("auth_token")
     const savedUser = localStorage.getItem("auth_user")
 
-    if (savedToken && savedUser) {
+    if (savedToken && savedUser && savedUser !== "undefined") {
       setToken(savedToken)
-      setUser(JSON.parse(savedUser))
+      try {
+        setUser(JSON.parse(savedUser))
+      } catch (error) {
+        console.error("[v0] Failed to parse saved user:", error)
+        // Clear invalid data
+        localStorage.removeItem("auth_user")
+      }
     }
 
     setLoading(false)
