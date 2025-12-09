@@ -8,6 +8,8 @@ export async function getDb() {
   return client.db(DATABASE_NAME)
 }
 
+export const connectDB = getDb
+
 export async function initializeCollections() {
   const db = await getDb()
 
