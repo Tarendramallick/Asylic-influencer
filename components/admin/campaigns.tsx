@@ -5,7 +5,14 @@ import type React from "react"
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
@@ -29,7 +36,7 @@ export function CampaignsSection() {
 
   const fetchCampaigns = async () => {
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("auth_token")
       const response = await fetch("/api/admin/campaigns", {
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -82,7 +89,7 @@ export function CampaignsSection() {
         const uploadFormData = new FormData()
         uploadFormData.append("file", imageFile)
 
-        const token = localStorage.getItem("token")
+        const token = localStorage.getItem("auth_token")
         const uploadResponse = await fetch("/api/admin/campaigns/upload", {
           method: "POST",
           headers: {
@@ -105,11 +112,11 @@ export function CampaignsSection() {
         client: formData.get("client"),
         budget: formData.get("budget"),
         category: formData.get("category"),
-        image: imageUrl, // Include image URL
+        image: imageUrl,
         status: "active",
       }
 
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("auth_token")
       const response = await fetch("/api/admin/campaigns", {
         method: "POST",
         headers: {
@@ -160,6 +167,9 @@ export function CampaignsSection() {
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Create New Campaign</DialogTitle>
+                <DialogDescription>
+                  Fill in the campaign details below to create a new marketing campaign.
+                </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleAddCampaign} className="space-y-4">
                 <div>
