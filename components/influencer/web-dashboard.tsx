@@ -24,13 +24,14 @@ export function InfluencerDashboard() {
       return
     }
 
+    syncInstagramData()
     fetchData()
 
     // Auto-sync Instagram data every 5 minutes
     const syncInterval = setInterval(syncInstagramData, 5 * 60 * 1000)
 
     return () => clearInterval(syncInterval)
-  }, [token, user])
+  }, [token, user]) // Updated dependency array
 
   const fetchData = async () => {
     try {
@@ -71,11 +72,14 @@ export function InfluencerDashboard() {
 
       if (response.ok) {
         const data = await response.json()
-        // Update user context with fresh data
         if (setUser && data.profile) {
           setUser((prev: any) => ({
             ...prev,
-            ...data.profile,
+            name: data.profile.name,
+            username: data.profile.username,
+            followers: data.profile.followers,
+            following: data.profile.following,
+            postCount: data.profile.postCount,
             profile: {
               ...prev.profile,
               engagementRate: data.profile.engagementRate,
