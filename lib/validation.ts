@@ -27,6 +27,7 @@ export const createCampaignSchema = z.object({
   deliverables: z.array(z.string()),
   category: z.string(),
   hashtags: z.array(z.string()),
+  image: z.string().url().optional(), // Optional campaign image URL
 })
 
 export const applyCampaignSchema = z.object({
