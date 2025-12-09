@@ -44,9 +44,21 @@ export function CampaignsSection() {
       if (response.ok) {
         const data = await response.json()
         setCampaigns(data)
+      } else {
+        console.error("[v0] Failed to fetch campaigns:", response.status, response.statusText)
+        toast({
+          title: "Error",
+          description: "Failed to load campaigns. Please check your authentication.",
+          variant: "destructive",
+        })
       }
     } catch (error) {
       console.error("[v0] Error fetching campaigns:", error)
+      toast({
+        title: "Error",
+        description: "Failed to connect to the server",
+        variant: "destructive",
+      })
     } finally {
       setLoading(false)
     }
@@ -86,24 +98,8 @@ export function CampaignsSection() {
 
       let imageUrl = ""
       if (imageFile) {
-        const uploadFormData = new FormData()
-        uploadFormData.append("file", imageFile)
-
-        const token = localStorage.getItem("auth_token")
-        const uploadResponse = await fetch("/api/admin/campaigns/upload", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: uploadFormData,
-        })
-
-        if (!uploadResponse.ok) {
-          throw new Error("Failed to upload image")
-        }
-
-        const uploadData = await uploadResponse.json()
-        imageUrl = uploadData.url
+        // Use the preview which is already base64
+        imageUrl = imagePreview || ""
       }
 
       const campaignData = {
@@ -134,13 +130,17 @@ export function CampaignsSection() {
         setIsDialogOpen(false)
         setImagePreview(null)
         setImageFile(null)
+        ;(e.target as HTMLFormElement).reset()
         fetchCampaigns()
+      } else {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Failed to create campaign")
       }
     } catch (error) {
       console.error("[v0] Error creating campaign:", error)
       toast({
         title: "Error",
-        description: "Failed to create campaign",
+        description: error instanceof Error ? error.message : "Failed to create campaign",
         variant: "destructive",
       })
     } finally {
