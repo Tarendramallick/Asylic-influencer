@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { title, description, client, budget, category, requirements, status } = body
+    const { title, description, client, budget, category, requirements, status, image } = body
 
     const campaign = {
       title,
@@ -60,6 +60,7 @@ export async function POST(request: NextRequest) {
       category,
       requirements: requirements || [],
       status: status || "active",
+      image: image || "", // Store image URL
       influencersApplied: [],
       createdAt: new Date(),
       updatedAt: new Date(),

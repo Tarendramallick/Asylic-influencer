@@ -35,6 +35,8 @@ import {
   ScrollText,
   Building2,
 } from "lucide-react"
+import Link from "next/link"
+import { usePathname, useRouter } from "next/navigation"
 import type * as React from "react"
 
 export function AdminShell({
@@ -44,20 +46,29 @@ export function AdminShell({
   children: React.ReactNode
   className?: string
 }) {
+  const pathname = usePathname()
+  const router = useRouter()
+
   const nav = [
-    { label: "Dashboard", icon: LayoutDashboard, href: "/admin#overview" },
-    { label: "Influencers", icon: Users2, href: "/admin#influencers" },
-    { label: "Clients", icon: Building2, href: "/admin#clients" },
-    { label: "Campaigns", icon: Megaphone, href: "/admin#campaigns" },
-    { label: "Verification", icon: CheckCircle2, href: "/admin#verification" },
-    { label: "Payments", icon: Wallet, href: "/admin#payments" },
-    { label: "Reports", icon: FileText, href: "/admin#reports" },
-    { label: "Disputes", icon: Flag, href: "/admin#disputes" },
-    { label: "Settings", icon: Settings, href: "/admin#settings" },
-    { label: "System Logs", icon: ScrollText, href: "/admin#system-logs" },
-    { label: "Notifications", icon: Bell, href: "/admin#notifications" },
-    { label: "System Health", icon: Activity, href: "/admin#system-health" },
+    { label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
+    { label: "Influencers", icon: Users2, href: "/admin/influencers" },
+    { label: "Clients", icon: Building2, href: "/admin/clients" },
+    { label: "Campaigns", icon: Megaphone, href: "/admin/campaigns" },
+    { label: "Verification", icon: CheckCircle2, href: "/admin/verification" },
+    { label: "Payments", icon: Wallet, href: "/admin/payments" },
+    { label: "Reports", icon: FileText, href: "/admin/reports" },
+    { label: "Disputes", icon: Flag, href: "/admin/disputes" },
+    { label: "Settings", icon: Settings, href: "/admin/settings" },
+    { label: "System Logs", icon: ScrollText, href: "/admin/system-logs" },
+    { label: "Notifications", icon: Bell, href: "/admin/notifications" },
+    { label: "System Health", icon: Activity, href: "/admin/system-health" },
   ]
+
+  const handleLogout = () => {
+    localStorage.removeItem("token")
+    localStorage.removeItem("auth_user")
+    router.push("/login")
+  }
 
   return (
     <SidebarProvider>
@@ -76,11 +87,11 @@ export function AdminShell({
               <SidebarMenu>
                 {nav.map((item) => (
                   <SidebarMenuItem key={item.label}>
-                    <SidebarMenuButton asChild>
-                      <a href={item.href} aria-label={item.label} className="flex items-center gap-2">
+                    <SidebarMenuButton asChild isActive={pathname === item.href}>
+                      <Link href={item.href} aria-label={item.label} className="flex items-center gap-2">
                         <item.icon />
                         <span>{item.label}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -92,7 +103,7 @@ export function AdminShell({
         <SidebarSeparator />
 
         <SidebarFooter>
-          <Button variant="ghost" className="justify-start">
+          <Button variant="ghost" className="justify-start" onClick={handleLogout}>
             <LogOut className="mr-2 size-4" />
             Logout
           </Button>
