@@ -1,5 +1,4 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { put } from "@vercel/blob"
 import { verifyToken, getTokenFromHeader } from "@/lib/auth"
 
 export async function POST(request: NextRequest) {
@@ -21,12 +20,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 })
     }
 
-    // Upload to Vercel Blob
-    const blob = await put(file.name, file, {
-      access: "public",
-    })
+    const bytes = await file.arrayBuffer()
+    const buffer = Buffer.from(bytes)
+    const base64 = buffer.toString("base64")
+    const mimeType = file.type
+    const dataUrl = `data:${mimeType};base64,${base64}`
 
-    return NextResponse.json({ url: blob.url })
+    return NextResponse.json({ url: dataUrl })
   } catch (error) {
     console.error("[v0] Error uploading campaign image:", error)
     return NextResponse.json({ error: "Failed to upload image" }, { status: 500 })
