@@ -1,65 +1,104 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, Zap } from "lucide-react"
+import { useAuth } from "@/lib/auth-context"
+import { Skeleton } from "@/components/ui/skeleton"
+import { useToast } from "@/hooks/use-toast"
 
-const categories = ["All", "Travel", "Fitness", "Tech", "Fashion", "Lifestyle"]
-
-const campaigns = [
-  {
-    id: 1,
-    title: "TravelGear Pro",
-    subtitle: "Summer Adventure Series 2024",
-    description: "Showcase our latest travel backpack in real-world adventure scenarios",
-    image: "/travel-adventure-backpack.jpg",
-    brand: "TravelGear",
-    payment: 15000,
-    daysLeft: 8,
-    deliverables: ["1 Reel", "2 Stories", "Carousel Post"],
-    hashtags: ["#TravelGearPro", "#AdventureReady"],
-    category: "Travel",
-  },
-  {
-    id: 2,
-    title: "Nike Summer",
-    subtitle: "Athletic Lifestyle Campaign",
-    description: "Feature Nike shoes in your daily fitness routine",
-    image: "/nike-athletic-shoes.jpg",
-    brand: "Nike",
-    payment: 12000,
-    daysLeft: 15,
-    deliverables: ["2 Reels", "1 Post"],
-    hashtags: ["#NikeSummer", "#AthleticStyle"],
-    category: "Fitness",
-  },
-  {
-    id: 3,
-    title: "Apple Tech Series",
-    subtitle: "Product Showcase",
-    description: "Create content featuring latest Apple products",
-    image: "/apple-tech-products.jpg",
-    brand: "Apple",
-    payment: 20000,
-    daysLeft: 12,
-    deliverables: ["1 Video", "3 Stories"],
-    hashtags: ["#AppleTech", "#Innovation"],
-    category: "Tech",
-  },
-]
+const categories = ["All", "Travel", "Fitness", "Tech", "Fashion", "Lifestyle", "Beauty", "Food"]
 
 export function BrowseCampaigns() {
+  const { token } = useAuth()
+  const { toast } = useToast()
   const [selectedCategory, setSelectedCategory] = useState("All")
+  const [campaigns, setCampaigns] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const filtered = selectedCategory === "All" ? campaigns : campaigns.filter((c) => c.category === selectedCategory)
+  useEffect(() => {
+    if (!token) return
+    fetchCampaigns()
+  }, [token, selectedCategory])
+
+  const fetchCampaigns = async () => {
+    setLoading(true)
+    try {
+      const url =
+        selectedCategory === "All" ? "/api/campaigns" : `/api/campaigns?category=${selectedCategory.toLowerCase()}`
+
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setCampaigns(data)
+      }
+    } catch (error) {
+      console.error("[v0] Error fetching campaigns:", error)
+      toast({
+        title: "Error",
+        description: "Failed to load campaigns",
+        variant: "destructive",
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleApply = async (campaignId: string) => {
+    try {
+      const response = await fetch(`/api/campaigns/${campaignId}/apply`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: "Application submitted successfully!",
+        })
+      } else {
+        const error = await response.json()
+        toast({
+          title: "Error",
+          description: error.error || "Failed to apply",
+          variant: "destructive",
+        })
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to apply to campaign",
+        variant: "destructive",
+      })
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-10 w-full" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <Skeleton key={i} className="h-96" />
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold">Browse Campaigns</h1>
-        <p className="text-muted-foreground mt-1">{filtered.length} campaigns available for you</p>
+        <p className="text-muted-foreground mt-1">{campaigns.length} campaigns available for you</p>
       </div>
 
       {/* Category Filter */}
@@ -78,63 +117,85 @@ export function BrowseCampaigns() {
       </div>
 
       {/* Campaigns Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filtered.map((campaign) => (
-          <Card key={campaign.id} className="overflow-hidden flex flex-col">
-            <div className="relative h-40 bg-muted overflow-hidden">
-              <img
-                src={campaign.image || "/placeholder.svg"}
-                alt={campaign.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-
-            <CardContent className="pt-4 flex-1 flex flex-col">
-              <div className="flex items-start justify-between mb-2">
-                <div>
-                  <h3 className="font-bold text-lg">{campaign.title}</h3>
-                  <p className="text-sm text-muted-foreground">{campaign.subtitle}</p>
-                </div>
-                <Badge variant="outline" className="ml-2 shrink-0">
-                  {campaign.category}
-                </Badge>
-              </div>
-
-              <p className="text-sm text-foreground mb-4 flex-1">{campaign.description}</p>
-
-              <div className="space-y-3 mb-4">
-                <div className="flex items-center gap-2 text-sm">
-                  <Zap className="w-4 h-4 text-primary" />
-                  <span className="font-semibold text-primary">₹{campaign.payment}</span>
-                </div>
-
-                <div className="flex items-center gap-2 text-sm">
-                  <Calendar className="w-4 h-4 text-amber-500" />
-                  <span>{campaign.daysLeft} days left</span>
-                </div>
-
-                <div>
-                  <p className="text-xs font-medium text-muted-foreground mb-1">Deliverables:</p>
-                  <div className="flex flex-wrap gap-1">
-                    {campaign.deliverables.map((d) => (
-                      <Badge key={d} variant="secondary" className="text-xs">
-                        {d}
-                      </Badge>
-                    ))}
+      {campaigns.length === 0 ? (
+        <Card className="p-6">
+          <p className="text-center text-muted-foreground">No campaigns found in this category</p>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {campaigns.map((campaign) => (
+            <Card key={campaign._id} className="overflow-hidden flex flex-col">
+              <div className="relative h-40 bg-gradient-to-br from-primary/20 to-accent/20 overflow-hidden">
+                {campaign.image ? (
+                  <img
+                    src={campaign.image || "/placeholder.svg"}
+                    alt={campaign.title}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <span className="text-4xl font-bold text-primary/30">{campaign.title.charAt(0)}</span>
                   </div>
-                </div>
-
-                <div>
-                  <p className="text-xs font-medium text-muted-foreground mb-1">Hashtags:</p>
-                  <p className="text-xs text-muted-foreground">{campaign.hashtags.join(" ")}</p>
-                </div>
+                )}
               </div>
 
-              <Button className="w-full">Apply Now</Button>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+              <CardContent className="pt-4 flex-1 flex flex-col">
+                <div className="flex items-start justify-between mb-2">
+                  <div>
+                    <h3 className="font-bold text-lg">{campaign.title}</h3>
+                    <p className="text-sm text-muted-foreground">{campaign.brandName || "Brand"}</p>
+                  </div>
+                  <Badge variant="outline" className="ml-2 shrink-0">
+                    {campaign.category}
+                  </Badge>
+                </div>
+
+                <p className="text-sm text-foreground mb-4 flex-1 line-clamp-2">{campaign.description}</p>
+
+                <div className="space-y-3 mb-4">
+                  <div className="flex items-center gap-2 text-sm">
+                    <Zap className="w-4 h-4 text-primary" />
+                    <span className="font-semibold text-primary">₹{campaign.budget.toLocaleString()}</span>
+                  </div>
+
+                  {campaign.deadline && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <Calendar className="w-4 h-4 text-amber-500" />
+                      <span>{new Date(campaign.deadline).toLocaleDateString()}</span>
+                    </div>
+                  )}
+
+                  {campaign.deliverables && campaign.deliverables.length > 0 && (
+                    <div>
+                      <p className="text-xs font-medium text-muted-foreground mb-1">Deliverables:</p>
+                      <div className="flex flex-wrap gap-1">
+                        {campaign.deliverables.map((d: string, i: number) => (
+                          <Badge key={i} variant="secondary" className="text-xs">
+                            {d}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {campaign.hashtags && campaign.hashtags.length > 0 && (
+                    <div>
+                      <p className="text-xs font-medium text-muted-foreground mb-1">Hashtags:</p>
+                      <p className="text-xs text-muted-foreground line-clamp-1">
+                        {campaign.hashtags.map((h: string) => `#${h}`).join(" ")}
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                <Button className="w-full" onClick={() => handleApply(campaign._id)}>
+                  Apply Now
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
