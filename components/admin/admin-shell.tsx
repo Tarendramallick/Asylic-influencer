@@ -34,6 +34,7 @@ import {
   Flag,
   ScrollText,
   Building2,
+  ImageIcon,
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
@@ -54,6 +55,7 @@ export function AdminShell({
     { label: "Influencers", icon: Users2, href: "/admin/influencers" },
     { label: "Clients", icon: Building2, href: "/admin/clients" },
     { label: "Campaigns", icon: Megaphone, href: "/admin/campaigns" },
+    { label: "Content Approval", icon: ImageIcon, href: "/admin/content-approval" },
     { label: "Verification", icon: CheckCircle2, href: "/admin/verification" },
     { label: "Payments", icon: Wallet, href: "/admin/payments" },
     { label: "Reports", icon: FileText, href: "/admin/reports" },
