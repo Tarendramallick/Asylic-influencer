@@ -137,8 +137,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(newToken)
     if (newToken) {
       localStorage.setItem("auth_token", newToken)
-      // Fetch user data when token is set
-      fetchUserFromToken(newToken)
+      // fetchUserFromToken(newToken) - This was causing conflicts on second login
     }
   }
 
