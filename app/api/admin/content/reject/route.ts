@@ -21,6 +21,14 @@ export async function POST(request: NextRequest) {
 
     const db = await getDb()
 
+    const content = await db.collection("content").findOne({
+      _id: toObjectId(contentId),
+    })
+
+    if (!content) {
+      return NextResponse.json({ error: "Content not found" }, { status: 404 })
+    }
+
     // Update content status
     await db.collection("content").updateOne(
       { _id: toObjectId(contentId) },
@@ -35,25 +43,25 @@ export async function POST(request: NextRequest) {
       },
     )
 
-    // Get content to find influencer
-    const content = await db.collection("content").findOne({
-      _id: toObjectId(contentId),
-    })
-
     // Create notification for influencer
     await db.collection("notifications").insertOne({
       userId: content.influencerId,
       type: "content_rejected",
       message: `Your content was rejected. Reason: ${reason || "Not specified"}`,
       contentId: toObjectId(contentId),
+      read: false,
       createdAt: new Date(),
     })
 
     return NextResponse.json({
-      message: "Content rejected",
+      message: "Content rejected successfully",
+      contentId: contentId,
     })
   } catch (error) {
     console.error("[v0] Error rejecting content:", error)
-    return NextResponse.json({ error: "Failed to reject content" }, { status: 500 })
+    return NextResponse.json(
+      { error: "Failed to reject content: " + (error instanceof Error ? error.message : "Unknown error") },
+      { status: 500 },
+    )
   }
 }
