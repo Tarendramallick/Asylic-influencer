@@ -12,12 +12,13 @@ import { useAuth } from "@/lib/auth-context"
 import { useRouter } from "next/navigation"
 
 export function UploadContent() {
-  const { token } = useAuth()
+  const { token, loading: authLoading } = useAuth()
   const router = useRouter()
   const [selected, setSelected] = useState<string>("")
   const [uploadMethod, setUploadMethod] = useState<"manual" | "instagram">("manual")
   const [file, setFile] = useState<File | null>(null)
   const [caption, setCaption] = useState("")
+  const [hashtags, setHashtags] = useState("")
   const [contentType, setContentType] = useState<"reel" | "story" | "carousel" | "post">("reel")
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -27,13 +28,22 @@ export function UploadContent() {
 
   React.useEffect(() => {
     const loadCampaigns = async () => {
+      if (authLoading || !token) {
+        console.log("[v0] Waiting for auth to load...")
+        setLoadingCampaigns(true)
+        return
+      }
+
       try {
         const response = await fetch("/api/campaigns", {
           headers: { Authorization: `Bearer ${token}` },
         })
         if (response.ok) {
           const data = await response.json()
+          console.log("[v0] Campaigns loaded:", data)
           setCampaigns(data)
+        } else {
+          console.error("[v0] Failed to load campaigns:", response.status)
         }
       } catch (err) {
         console.error("[v0] Error loading campaigns:", err)
@@ -42,10 +52,10 @@ export function UploadContent() {
       }
     }
 
-    if (token) {
+    if (!authLoading) {
       loadCampaigns()
     }
-  }, [token])
+  }, [token, authLoading])
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
@@ -100,7 +110,6 @@ export function UploadContent() {
     setError(null)
 
     try {
-      // Convert file to base64
       const reader = new FileReader()
       reader.onload = async () => {
         const base64String = reader.result as string
@@ -116,6 +125,7 @@ export function UploadContent() {
             contentType,
             contentUrl: base64String,
             caption,
+            hashtags: hashtags.split(" ").filter((tag) => tag.length > 0),
           }),
         })
 
@@ -130,9 +140,9 @@ export function UploadContent() {
         setSuccess(true)
         setFile(null)
         setCaption("")
+        setHashtags("")
         setSelected("")
 
-        // Reset success message after 3 seconds
         setTimeout(() => {
           setSuccess(false)
           router.refresh()
@@ -148,6 +158,17 @@ export function UploadContent() {
     }
   }
 
+  if (authLoading) {
+    return (
+      <div className="space-y-6 max-w-2xl">
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="w-6 h-6 animate-spin text-primary" />
+          <p className="ml-2 text-muted-foreground">Loading your session...</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
@@ -155,7 +176,6 @@ export function UploadContent() {
         <p className="text-muted-foreground mt-1">Submit your campaign deliverables</p>
       </div>
 
-      {/* Success Message */}
       {success && (
         <Card className="border-green-500 bg-green-50">
           <CardContent className="pt-6 flex items-center gap-3">
@@ -168,7 +188,6 @@ export function UploadContent() {
         </Card>
       )}
 
-      {/* Error Message */}
       {error && (
         <Card className="border-red-500 bg-red-50">
           <CardContent className="pt-6 flex items-center gap-3">
@@ -300,6 +319,21 @@ export function UploadContent() {
                 onChange={(e) => setCaption(e.target.value)}
                 className="min-h-24"
               />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Hashtags</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Textarea
+                placeholder="Enter hashtags separated by spaces (e.g., #reels #instagram #trending)"
+                value={hashtags}
+                onChange={(e) => setHashtags(e.target.value)}
+                className="min-h-20"
+              />
+              <p className="text-xs text-muted-foreground mt-2">Tip: Enter multiple hashtags separated by spaces</p>
             </CardContent>
           </Card>
         </>
