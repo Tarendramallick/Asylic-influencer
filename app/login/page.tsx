@@ -16,7 +16,7 @@ export default function LoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const roleParam = searchParams.get("role")
-  const { login, setToken } = useAuth()
+  const { login } = useAuth()
   const { toast } = useToast()
 
   const [role, setRole] = useState<string>(roleParam || "")
@@ -65,7 +65,8 @@ export default function LoginPage() {
       }
 
       const data = await response.json()
-      setToken(data.token)
+      localStorage.setItem("auth_token", data.token)
+      localStorage.setItem("auth_user", JSON.stringify(data.user))
       toast({
         title: "Success",
         description: `Welcome ${data.user.username}! (Test User)`,
