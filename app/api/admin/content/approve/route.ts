@@ -1,7 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getDb, toObjectId } from "@/lib/database"
 import { verifyToken, getTokenFromHeader } from "@/lib/auth"
-import { publishContentToInstagram } from "@/lib/instagram"
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,7 +21,6 @@ export async function POST(request: NextRequest) {
 
     const db = await getDb()
 
-    // Get content details
     const content = await db.collection("content").findOne({
       _id: toObjectId(contentId),
     })
@@ -31,69 +29,42 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Content not found" }, { status: 404 })
     }
 
-    // Get influencer with Instagram token
-    const influencer = await db.collection("users").findOne({
-      _id: content.influencerId,
+    // Update content status to approved
+    const result = await db.collection("content").updateOne(
+      { _id: toObjectId(contentId) },
+      {
+        $set: {
+          approvalStatus: "approved",
+          approvedAt: new Date(),
+          approvedBy: toObjectId(payload.userId),
+          updatedAt: new Date(),
+        },
+      },
+    )
+
+    if (result.matchedCount === 0) {
+      return NextResponse.json({ error: "Failed to update content" }, { status: 500 })
+    }
+
+    // Create notification for influencer
+    await db.collection("notifications").insertOne({
+      userId: content.influencerId,
+      type: "content_approved",
+      message: "Your content has been approved! You can now share it on Instagram.",
+      contentId: toObjectId(contentId),
+      read: false,
+      createdAt: new Date(),
     })
 
-    if (!influencer || !influencer.instagramAccessToken) {
-      return NextResponse.json(
-        {
-          error: "Influencer Instagram account not connected",
-        },
-        { status: 400 },
-      )
-    }
-
-    // Publish to Instagram
-    try {
-      const instagramResult = await publishContentToInstagram(
-        influencer.instagramAccessToken,
-        content.contentUrl,
-        content.caption,
-        content.hashtags,
-      )
-
-      // Update content status
-      await db.collection("content").updateOne(
-        { _id: toObjectId(contentId) },
-        {
-          $set: {
-            approvalStatus: "approved",
-            instagramPostId: instagramResult.postId,
-            instagramUrl: instagramResult.url,
-            approvedAt: new Date(),
-            approvedBy: toObjectId(payload.userId),
-            updatedAt: new Date(),
-          },
-        },
-      )
-
-      // Create notification for influencer
-      await db.collection("notifications").insertOne({
-        userId: content.influencerId,
-        type: "content_approved",
-        message: "Your content has been approved and posted to Instagram!",
-        contentId: toObjectId(contentId),
-        instagramUrl: instagramResult.url,
-        createdAt: new Date(),
-      })
-
-      return NextResponse.json({
-        message: "Content approved and posted to Instagram",
-        instagramUrl: instagramResult.url,
-      })
-    } catch (instagramError) {
-      console.error("[v0] Instagram posting error:", instagramError)
-      return NextResponse.json(
-        {
-          error: "Content approved but failed to post to Instagram. Will retry later.",
-        },
-        { status: 500 },
-      )
-    }
+    return NextResponse.json({
+      message: "Content approved successfully",
+      contentId: contentId,
+    })
   } catch (error) {
     console.error("[v0] Error approving content:", error)
-    return NextResponse.json({ error: "Failed to approve content" }, { status: 500 })
+    return NextResponse.json(
+      { error: "Failed to approve content: " + (error instanceof Error ? error.message : "Unknown error") },
+      { status: 500 },
+    )
   }
 }
