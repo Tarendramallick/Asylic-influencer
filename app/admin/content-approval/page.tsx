@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { CheckCircle, Loader2 } from "lucide-react"
 
 export default function ContentApprovalPage() {
-  const { token, user } = useAuth()
+  const { token, user, loading: authLoading } = useAuth()
   const router = useRouter()
   const [pendingContent, setPendingContent] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -18,35 +18,45 @@ export default function ContentApprovalPage() {
   const [rejectionReason, setRejectionReason] = useState("")
   const [isApproving, setIsApproving] = useState(false)
   const [isRejecting, setIsRejecting] = useState(false)
+  const [error, setError] = useState("")
 
   useEffect(() => {
+    if (authLoading) return
+
     if (!token || user?.role !== "admin") {
+      console.log("[v0] Auth check failed:", { token: !!token, role: user?.role })
       router.push("/login?role=admin")
       return
     }
 
     fetchPendingContent()
-  }, [token, user, router])
+  }, [token, user, authLoading, router])
 
   const fetchPendingContent = async () => {
+    if (!token) return
+
     try {
       const response = await fetch("/api/admin/content/pending", {
         headers: { Authorization: `Bearer ${token}` },
       })
 
-      if (response.ok) {
-        const data = await response.json()
-        setPendingContent(data)
+      if (!response.ok) {
+        throw new Error("Failed to fetch pending content")
       }
-    } catch (error) {
-      console.error("[v0] Error fetching pending content:", error)
+
+      const data = await response.json()
+      setPendingContent(Array.isArray(data) ? data : data.content || [])
+      setError("")
+    } catch (err) {
+      console.error("[v0] Error fetching pending content:", err)
+      setError("Failed to load pending content")
     } finally {
       setLoading(false)
     }
   }
 
   const handleApprove = async () => {
-    if (!selectedContent) return
+    if (!selectedContent || !token) return
 
     setIsApproving(true)
     try {
@@ -61,20 +71,22 @@ export default function ContentApprovalPage() {
         }),
       })
 
-      if (response.ok) {
-        setPendingContent((prev) => prev.filter((c) => c._id !== selectedContent._id))
-        setSelectedContent(null)
-        fetchPendingContent()
+      if (!response.ok) {
+        throw new Error("Failed to approve content")
       }
-    } catch (error) {
-      console.error("[v0] Error approving content:", error)
+
+      setPendingContent((prev) => prev.filter((c) => c._id !== selectedContent._id))
+      setSelectedContent(null)
+    } catch (err) {
+      console.error("[v0] Error approving content:", err)
+      setError("Failed to approve content")
     } finally {
       setIsApproving(false)
     }
   }
 
   const handleReject = async () => {
-    if (!selectedContent || !rejectionReason) return
+    if (!selectedContent || !rejectionReason || !token) return
 
     setIsRejecting(true)
     try {
@@ -90,24 +102,26 @@ export default function ContentApprovalPage() {
         }),
       })
 
-      if (response.ok) {
-        setPendingContent((prev) => prev.filter((c) => c._id !== selectedContent._id))
-        setSelectedContent(null)
-        setRejectionReason("")
-        fetchPendingContent()
+      if (!response.ok) {
+        throw new Error("Failed to reject content")
       }
-    } catch (error) {
-      console.error("[v0] Error rejecting content:", error)
+
+      setPendingContent((prev) => prev.filter((c) => c._id !== selectedContent._id))
+      setSelectedContent(null)
+      setRejectionReason("")
+    } catch (err) {
+      console.error("[v0] Error rejecting content:", err)
+      setError("Failed to reject content")
     } finally {
       setIsRejecting(false)
     }
   }
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 className="w-6 h-6 animate-spin text-primary" />
-        <p className="ml-2 text-muted-foreground">Loading pending content...</p>
+        <p className="ml-2 text-muted-foreground">Loading...</p>
       </div>
     )
   }
@@ -118,6 +132,14 @@ export default function ContentApprovalPage() {
         <h1 className="text-3xl font-bold">Content Approval</h1>
         <p className="text-muted-foreground mt-1">Review and approve influencer content before posting to Instagram</p>
       </div>
+
+      {error && (
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="pt-6">
+            <p className="text-red-800">{error}</p>
+          </CardContent>
+        </Card>
+      )}
 
       {pendingContent.length === 0 ? (
         <Card>
@@ -134,8 +156,8 @@ export default function ContentApprovalPage() {
               <CardHeader>
                 <div className="flex justify-between items-start">
                   <div>
-                    <CardTitle className="text-lg">{content.influencer?.name}</CardTitle>
-                    <p className="text-sm text-muted-foreground mt-1">{content.campaign?.title}</p>
+                    <CardTitle className="text-lg">{content.influencer?.name || "Unknown Influencer"}</CardTitle>
+                    <p className="text-sm text-muted-foreground mt-1">{content.campaign?.title || "No Campaign"}</p>
                   </div>
                   <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-semibold">
                     {content.contentType}
