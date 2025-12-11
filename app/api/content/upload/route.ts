@@ -27,14 +27,16 @@ export async function POST(request: NextRequest) {
       contentType: validated.contentType,
       contentUrl: validated.contentUrl,
       caption: validated.caption || "",
+      hashtags: body.hashtags || [],
       status: "pending_review",
+      approvalStatus: "pending",
       createdAt: new Date(),
       updatedAt: new Date(),
     })
 
     return NextResponse.json(
       {
-        message: "Content uploaded successfully",
+        message: "Content uploaded successfully. Awaiting admin approval.",
         contentId: result.insertedId.toString(),
       },
       { status: 201 },
