@@ -38,8 +38,9 @@ export const applyCampaignSchema = z.object({
 export const uploadContentSchema = z.object({
   campaignId: z.string(),
   contentType: z.enum(["reel", "story", "carousel", "post"]),
-  contentUrl: z.string().url(),
+  contentUrl: z.string(),
   caption: z.string().optional(),
+  hashtags: z.array(z.string()).optional(), // Added hashtags array to validation schema
 })
 
 export const requestPayoutSchema = z.object({

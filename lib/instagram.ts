@@ -122,3 +122,74 @@ export async function getInstagramMedia(accessToken: string) {
     throw error
   }
 }
+
+export async function publishContentToInstagram(
+  accessToken: string,
+  contentUrl: string,
+  caption: string,
+  hashtags: string[] = [],
+) {
+  try {
+    // Get user ID first
+    const profileResponse = await fetch(`https://graph.instagram.com/v20.0/me?fields=id&access_token=${accessToken}`)
+    const profileData = await profileResponse.json()
+    const userId = profileData.id
+
+    if (!userId) {
+      throw new Error("Unable to get Instagram user ID")
+    }
+
+    // Prepare caption with hashtags
+    const fullCaption = hashtags.length > 0 ? `${caption} ${hashtags.join(" ")}` : caption
+
+    // For now, we'll create a container for the upload
+    // In production, you'd need to upload video/image first
+    const containerResponse = await fetch(`https://graph.instagram.com/v20.0/${userId}/media`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        media_type: contentUrl.includes("video") || contentUrl.includes("mp4") ? "VIDEO" : "IMAGE",
+        video_url: contentUrl,
+        image_url: contentUrl,
+        caption: fullCaption,
+        access_token: accessToken,
+      }).toString(),
+    })
+
+    const containerData = await containerResponse.json()
+
+    if (!containerResponse.ok) {
+      console.error("[v0] Instagram container error:", containerData)
+      throw new Error(containerData.error?.message || "Failed to create media container")
+    }
+
+    const containerId = containerData.id
+
+    // Publish the container
+    const publishResponse = await fetch(`https://graph.instagram.com/v20.0/${userId}/media_publish`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        creation_id: containerId,
+        access_token: accessToken,
+      }).toString(),
+    })
+
+    const publishData = await publishResponse.json()
+
+    if (!publishResponse.ok) {
+      console.error("[v0] Instagram publish error:", publishData)
+      throw new Error(publishData.error?.message || "Failed to publish to Instagram")
+    }
+
+    console.log("[v0] Successfully published content to Instagram:", publishData)
+
+    return {
+      postId: publishData.id,
+      url: `https://instagram.com/p/${publishData.id}`,
+    }
+  } catch (error) {
+    console.error("[v0] Instagram publishing error:", error)
+    throw error
+  }
+}
