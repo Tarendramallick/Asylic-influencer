@@ -83,7 +83,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setToken(data.token)
       setUser(data.user)
 
-      if (data.user.role === "brand" || data.user.role === "admin") {
+      if (data.user.role === "admin") {
+        router.push("/admin")
+      } else if (data.user.role === "brand") {
         router.push("/client")
       } else {
         router.push("/influencer")
