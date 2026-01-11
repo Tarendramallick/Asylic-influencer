@@ -1,204 +1,270 @@
-"use client"
+'use client';
 
-import type React from "react"
-
-import { useRouter, useSearchParams } from "next/navigation"
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { ArrowLeft, Eye, EyeOff, Instagram } from "lucide-react"
-import Link from "next/link"
-import { useAuth } from "@/lib/auth-context"
-import { useToast } from "@/hooks/use-toast"
+import type React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { ArrowLeft, Eye, EyeOff, Instagram } from "lucide-react";
+import Link from "next/link";
+import { useAuth } from "@/lib/auth-context";
+import { useToast } from "@/hooks/use-toast";
+import { motion } from "framer-motion";
 
 export default function LoginPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const roleParam = searchParams.get("role")
-  const { login } = useAuth()
-  const { toast } = useToast()
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const roleParam = searchParams.get("role");
+  const { login } = useAuth();
+  const { toast } = useToast();
 
-  const [role, setRole] = useState<string>(roleParam || "")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const [testAccessToken, setTestAccessToken] = useState("")
-  const [showTestTokenForm, setShowTestTokenForm] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [role, setRole] = useState<string>(roleParam || "");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [testAccessToken, setTestAccessToken] = useState("");
+  const [showTestTokenForm, setShowTestTokenForm] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const isInfluencer = role === "influencer";
+  const isBrand = role === "brand";
+
+  // Animated Background Colors
+  const bgColors = ["#5B6EE1", "#6C7AF2", "#2C8C8C", "#8B5CF6", "#3B82F6"];
+  const [bgIndex, setBgIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBgIndex((prev) => (prev + 1) % bgColors.length);
+    }, 8000); // slow 8s animation
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-
+    e.preventDefault();
+    setIsLoading(true);
     try {
-      await login(email, password)
+      await login(email, password);
     } catch (error) {
       toast({
         title: "Login failed",
         description: error instanceof Error ? error.message : "Invalid credentials",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleInstagramLogin = () => {
-    window.location.href = "/api/auth/instagram"
-  }
+    window.location.href = "/api/auth/instagram";
+  };
 
   const handleTestUserLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-
+    e.preventDefault();
+    setIsLoading(true);
     try {
       const response = await fetch("/api/auth/instagram/test", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ accessToken: testAccessToken }),
-      })
-
+      });
       if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error || "Test user login failed")
+        const error = await response.json();
+        throw new Error(error.error || "Test user login failed");
       }
-
-      const data = await response.json()
-      localStorage.setItem("auth_token", data.token)
-      localStorage.setItem("auth_user", JSON.stringify(data.user))
+      const data = await response.json();
+      localStorage.setItem("auth_token", data.token);
+      localStorage.setItem("auth_user", JSON.stringify(data.user));
       toast({
         title: "Success",
         description: `Welcome ${data.user.username}! (Test User)`,
-      })
-      router.push("/influencer")
+      });
+      router.push("/influencer");
     } catch (error) {
       toast({
         title: "Test user login failed",
         description: error instanceof Error ? error.message : "Invalid access token",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
+  // Role selection page
   if (!role) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Welcome to Asylic.in</CardTitle>
-            <CardDescription>Choose your account type to continue</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Button onClick={() => setRole("influencer")} variant="outline" className="w-full h-12 justify-start">
-              <Instagram className="w-5 h-5 mr-2" />
-              Join as Influencer
-            </Button>
-            <Button onClick={() => setRole("brand")} variant="outline" className="w-full h-12 justify-start">
-              Continue as Brand
-            </Button>
-            <Button onClick={() => setRole("admin")} variant="outline" className="w-full h-12 justify-start">
-              Admin Access
-            </Button>
-            <Button onClick={() => router.push("/")} variant="ghost" className="w-full">
+      <motion.div
+        animate={{ backgroundColor: bgColors[bgIndex] }}
+        transition={{ duration: 8, ease: "easeInOut" }}
+        className="min-h-screen flex items-center justify-center px-4 py-16"
+      >
+        <div className="w-full max-w-4xl">
+          {/* Header */}
+          <div className="text-center mb-12 text-white">
+            <h1 className="text-3xl md:text-4xl font-bold">Welcome to Asylic</h1>
+            <p className="mt-2 text-white/70">Choose how you want to continue</p>
+          </div>
+
+          {/* Role Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Influencer */}
+            <button
+              onClick={() => setRole("influencer")}
+              className="group text-left bg-black/60 border border-white/20 rounded-2xl p-8 hover:border-purple-500 transition-all hover:-translate-y-1 shadow-lg"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-semibold text-white">Influencer</h3>
+                  <p className="mt-2 text-sm text-white/70">
+                    Collaborate with brands & monetize your audience
+                  </p>
+                </div>
+                <Instagram className="w-8 h-8 text-purple-500 group-hover:scale-110 transition" />
+              </div>
+              <div className="mt-6 text-sm font-medium text-purple-500">
+                Continue as Influencer →
+              </div>
+            </button>
+
+            {/* Brand */}
+            <button
+              onClick={() => setRole("brand")}
+              className="group text-left bg-black/60 border border-white/20 rounded-2xl p-8 hover:border-emerald-500 transition-all hover:-translate-y-1 shadow-lg"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-semibold text-white">Brand</h3>
+                  <p className="mt-2 text-sm text-white/70">
+                    Launch campaigns & discover creators
+                  </p>
+                </div>
+                <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                  <span className="text-emerald-500 font-bold">B</span>
+                </div>
+              </div>
+              <div className="mt-6 text-sm font-medium text-emerald-500">
+                Continue as Brand →
+              </div>
+            </button>
+          </div>
+
+          {/* Footer */}
+          <div className="mt-10 text-center">
+            <Button variant="ghost" onClick={() => router.push("/")}>
               Back to Home
             </Button>
-          </CardContent>
-        </Card>
-      </div>
-    )
+          </div>
+        </div>
+      </motion.div>
+    );
   }
 
+  // Login Form Page
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
+    <motion.div
+      animate={{ backgroundColor: bgColors[bgIndex] }}
+      transition={{ duration: 8, ease: "easeInOut" }}
+      className="min-h-screen flex items-center justify-center px-4 py-16"
+    >
+      <Card className="w-full max-w-md bg-black/70 backdrop-blur-md border border-white/10 rounded-3xl shadow-2xl">
         <CardHeader>
-          <Button variant="ghost" size="sm" className="mb-4 -ml-2 w-fit" onClick={() => setRole("")}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="mb-4 -ml-2 w-fit text-white"
+            onClick={() => setRole("")}
+          >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
-          <CardTitle className="text-2xl">
-            {role === "influencer" ? "Influencer Login" : role === "brand" ? "Brand Login" : "Admin Login"}
+          <CardTitle className="text-2xl text-white">
+            {isInfluencer ? "Influencer Login" : isBrand ? "Brand Login" : "Admin Login"}
           </CardTitle>
-          <CardDescription>
-            {role === "influencer"
+          <CardDescription className="text-white/70">
+            {isInfluencer
               ? "Sign in to your creator account"
-              : role === "brand"
-                ? "Sign in to your brand account"
-                : "Sign in to admin panel"}
+              : isBrand
+              ? "Sign in to your brand account"
+              : "Sign in to admin panel"}
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="space-y-6">
-          {role === "influencer" && (
-            <>
+        <CardContent className="space-y-8">
+
+          {/* INFLUENCER – Instagram First */}
+          {isInfluencer && (
+            <div className="space-y-6">
+              {/* Instagram CTA */}
               <Button
                 onClick={handleInstagramLogin}
                 disabled={isLoading}
-                className="w-full h-12 bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90"
+                className="w-full h-14 text-base font-semibold bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-1"
               >
                 <Instagram className="w-5 h-5 mr-2" />
                 Continue with Instagram
               </Button>
 
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-border" />
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-background text-muted-foreground">Test User</span>
-                </div>
-              </div>
+              <p className="text-xs text-center text-white/70">
+                Recommended for creators • Fast & secure
+              </p>
 
-              <div>
+              {/* Test User Card */}
+              <div className="bg-black/60 border border-white/20 rounded-xl p-4 space-y-3">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => setShowTestTokenForm(!showTestTokenForm)}
-                  className="w-full"
+                  className="w-full text-white"
                 >
                   {showTestTokenForm ? "Hide Test Login" : "Login with Test Token"}
                 </Button>
 
                 {showTestTokenForm && (
-                  <form onSubmit={handleTestUserLogin} className="mt-4 space-y-3">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-foreground">Instagram Access Token</label>
-                      <textarea
-                        placeholder="Paste your test Instagram access token here"
-                        value={testAccessToken}
-                        onChange={(e) => setTestAccessToken(e.target.value)}
-                        required
-                        className="w-full px-3 py-2 text-sm border border-input rounded-md bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                        rows={3}
-                      />
-                      <p className="text-xs text-muted-foreground">
-                        This is for testing only. Use your Instagram test app access token.
-                      </p>
-                    </div>
+                  <form onSubmit={handleTestUserLogin} className="space-y-3 mt-2">
+                    <label className="text-sm font-medium text-white">Instagram Access Token</label>
+                    <textarea
+                      placeholder="Paste your test Instagram access token here"
+                      value={testAccessToken}
+                      onChange={(e) => setTestAccessToken(e.target.value)}
+                      required
+                      className="w-full px-3 py-2 text-sm border border-white/20 rounded-md bg-black/50 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      rows={3}
+                    />
                     <Button type="submit" disabled={isLoading} className="w-full h-10">
                       {isLoading ? "Logging in..." : "Login as Test User"}
                     </Button>
                   </form>
                 )}
               </div>
-            </>
+
+              {/* Divider */}
+              <div className="relative my-4">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-white/20" />
+                </div>
+                <div className="relative flex justify-center text-xs">
+                  <span className="px-2 bg-black/70 text-white/70">
+                    Or continue with email
+                  </span>
+                </div>
+              </div>
+            </div>
           )}
 
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-border" />
+          {/* BRAND – Email-first */}
+          {isBrand && (
+            <div className="text-center mb-4 text-sm text-white/70">
+              Sign in to manage your campaigns & creators
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-background text-muted-foreground">Or continue with email</span>
-            </div>
-          </div>
+          )}
 
-          <form onSubmit={handleLogin} className="space-y-4">
+          {/* Email / Password Form */}
+          <form onSubmit={handleLogin} className="space-y-4 bg-black/60 border border-white/10 rounded-2xl p-6 shadow-md">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">Email</label>
+              <label className="text-sm font-medium text-white">Email</label>
               <Input
                 type="email"
                 placeholder="you@example.com"
@@ -209,7 +275,7 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">Password</label>
+              <label className="text-sm font-medium text-white">Password</label>
               <div className="relative">
                 <Input
                   type={showPassword ? "text" : "password"}
@@ -221,26 +287,27 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/70 hover:text-white"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
 
-            <Button type="submit" disabled={isLoading} className="w-full h-12">
+            <Button type="submit" disabled={isLoading} className="w-full h-12 bg-purple-600 hover:bg-purple-700 shadow-md transition-transform transform hover:-translate-y-0.5 text-white font-semibold">
               {isLoading ? "Signing in..." : "Sign In"}
             </Button>
           </form>
 
-          <div className="text-center text-sm">
-            <span className="text-muted-foreground">Don't have an account? </span>
-            <Link href="/signup" className="text-primary hover:underline font-semibold">
+          {/* Signup Link */}
+          <div className="text-center text-sm mt-2 text-white/70">
+            <span>Don't have an account? </span>
+            <Link href="/signup" className="text-purple-400 hover:underline font-semibold">
               Sign up
             </Link>
           </div>
         </CardContent>
       </Card>
-    </div>
-  )
+    </motion.div>
+  );
 }

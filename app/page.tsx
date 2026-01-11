@@ -5,35 +5,63 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { ArrowRight, Zap, Target, BarChart3, Smartphone, Users, Lock, TrendingUp } from "lucide-react"
+import Header from "@/components/Header"
+import HeroSection from "@/components/HeroSection"
+import TrustedCarousel from "@/components/TrustedCarousel"
+import SelectedWorkHeader from "@/components/SelectedWorkSection"
+import { PushWord } from "@/components/PushWord"
+import ScrollCard from "@/components/ScrollCard"
+import GetADemo from "@/components/Demo"
 
 export default function HomePage() {
   const router = useRouter()
 
   return (
-    <div className="min-h-screen bg-background">
+    <main className="min-h-screen bg-[#FF67AA] pt-28">
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-background border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary to-blue-700 rounded-lg flex items-center justify-center">
-              <Target className="w-6 h-6 text-white" />
-            </div>
-            <div className="font-bold text-xl text-foreground">Asylic.in</div>
-          </div>
-          <div className="flex gap-3">
-            <Button variant="ghost" className="text-foreground hover:bg-accent" onClick={() => router.push("/login")}>
-              Sign In
-            </Button>
-            <Button
-              className="bg-primary hover:opacity-90 text-primary-foreground"
-              onClick={() => router.push("/login")}
-            >
-              Get Started
-            </Button>
-          </div>
-        </div>
-      </nav>
+      <Header />
+      <HeroSection />
+      <TrustedCarousel />
+      <div>
+      <ScrollCard
+        index={0}
+        total={4}
+        bg="#ff521a"
+        title="Find, vet, and connect with the right creators for your brand" 
+      />
+      <ScrollCard
+        index={0}
+        total={4}
+        bg="#c08cf2"
+        title="Keep every collaboration organized from start to finish" 
+      />
+      <ScrollCard
+        index={0}
+        total={4}
+        bg="#cfc4af"
+        title="Auto-track influencer campaign metrics & content" 
+      />
+      <ScrollCard
+        index={0}
+        total={4}
+        bg="#ffbe99"
+        title="Send fast, secure payments to creators worldwide" 
+      />
+      <ScrollCard
+        index={0}
+        total={4}
+        bg="#ffa3d1"
+        title="it's time to upgrade to Asylic" 
+      />
+      </div>
+      <GetADemo />
+      <div className="min-h-[100vh] w-[50%] flex flex-col justify-center items-center bg-black">
+        <PushWord text="TARENDRA" fontSize={50} color="#FF0055" letterSpacing={15} delayStep={0} />
+        <PushWord text="MALLICK" fontSize={80} color="white" letterSpacing={20} delayStep={0.01} />
+      </div>
 
+      <PushWord text="TARENDRA" fontSize={80} color="#FF0055" letterSpacing={10} />
+      <PushWord text="MALLICK" fontSize={80} color="white" letterSpacing={10}  />
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -250,6 +278,6 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
-    </div>
+    </main>
   )
 }
