@@ -1,17 +1,17 @@
 import Image from 'next/image';
 
 const brands = [
-  { name: 'Honey', logo: '/brands/honey.svg' },
-  { name: 'Primal', logo: '/brands/primal.svg' },
-  { name: 'Ilia', logo: '/brands/ilia.svg' },
-  { name: 'Loverly', logo: '/brands/lovery.svg' },
-  { name: 'Liquid IV', logo: '/brands/liquidiv.svg' },
+  { name: 'Honey', logo: '/brands/1.svg' },
+  { name: 'Primal', logo: '/brands/2.svg' },
+  { name: 'Ilia', logo: '/brands/3.svg' },
+  { name: 'Loverly', logo: '/brands/4.svg' },
+  { name: 'Liquid IV', logo: '/brands/5.svg' },
 ];
 
 export default function TrustedCarousel() {
   return (
     <section className="w-full px-4 md:px-6 lg:px-8 mt-16">
-      <div className="max-w-7xl mx-auto bg-[#111] rounded-3xl py-10">
+      <div className="max-w-7xl mx-auto bg-[#111] rounded-3xl py-10 overflow-hidden">
 
         {/* Heading */}
         <p className="text-center text-sm text-gray-400 mb-8">
@@ -19,8 +19,8 @@ export default function TrustedCarousel() {
         </p>
 
         {/* Marquee */}
-        <div className="marquee-wrapper">
-          <div className="marquee gap-16">
+        <div className="relative w-full overflow-hidden">
+          <div className="flex w-max animate-marquee gap-16">
             {[...brands, ...brands].map((brand, index) => (
               <div
                 key={index}

@@ -98,55 +98,111 @@ export default function LoginPage() {
     return (
       <motion.div
         animate={{ backgroundColor: bgColors[bgIndex] }}
-        transition={{ duration: 8, ease: "easeInOut" }}
-        className="min-h-screen flex items-center justify-center px-4 py-16"
+        transition={{ duration: 1, ease: "easeInOut" }}
+        className="h-screen flex items-center justify-center px-4 py-16"
       >
-        <div className="w-full max-w-4xl">
+        <div className="w-full relative h-full rounded-[32px] border-2 border-lime-300 max-w-8xl">
           {/* Header */}
-          <div className="text-center mb-12 text-white">
-            <h1 className="text-3xl md:text-4xl font-bold">Welcome to Asylic</h1>
+          <div className="text-center flex justify-center mb-12 text-white">
+            <h1 className="absolute 
+              -top-12
+              bg-lime-300 
+              text-black 
+              font-semibold 
+              text-[40px]
+              px-12
+              py-4 
+              rounded-full 
+              hover:scale-105 
+              transition-transform
+              z-20">Welcome to Asylic</h1>
             <p className="mt-2 text-white/70">Choose how you want to continue</p>
+            <button
+            className="
+              absolute 
+              -bottom-7
+              bg-lime-300 
+              text-black 
+              font-semibold 
+              text-[15px]
+              px-12
+              py-4 
+              rounded-full 
+              hover:scale-105 
+              transition-transform
+              z-20
+            "
+            onClick={() => router.push("/")}
+          >
+            Get a demo
+          </button>
           </div>
 
           {/* Role Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-10">
             {/* Influencer */}
             <button
               onClick={() => setRole("influencer")}
-              className="group text-left bg-black/60 border border-white/20 rounded-2xl p-8 hover:border-purple-500 transition-all hover:-translate-y-1 shadow-lg"
+              className="group relative w-[300px] aspect-[9/16] overflow-hidden rounded-3xl border border-white/20 shadow-2xl hover:scale-[1.03] transition-transform"
             >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-xl font-semibold text-white">Influencer</h3>
-                  <p className="mt-2 text-sm text-white/70">
-                    Collaborate with brands & monetize your audience
-                  </p>
+              {/* VIDEO */}
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover"
+                src="/demo.mp4"
+              />
+
+              {/* DARK OVERLAY */}
+              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/25 transition-colors" />
+
+              {/* CONTENT */}
+              <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
+                <h3 className="text-xl font-semibold text-white">
+                  Influencer
+                </h3>
+                <p className="mt-1 text-sm text-white/80">
+                  Collaborate with brands & monetize your audience
+                </p>
+
+                <div className="mt-4 text-sm font-medium text-purple-400">
+                  Continue →
                 </div>
-                <Instagram className="w-8 h-8 text-purple-500 group-hover:scale-110 transition" />
-              </div>
-              <div className="mt-6 text-sm font-medium text-purple-500">
-                Continue as Influencer →
               </div>
             </button>
 
             {/* Brand */}
             <button
               onClick={() => setRole("brand")}
-              className="group text-left bg-black/60 border border-white/20 rounded-2xl p-8 hover:border-emerald-500 transition-all hover:-translate-y-1 shadow-lg"
+              className="group relative w-[300px] aspect-[9/16] overflow-hidden rounded-3xl border border-white/20 shadow-2xl hover:scale-[1.03] transition-transform"
             >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-xl font-semibold text-white">Brand</h3>
-                  <p className="mt-2 text-sm text-white/70">
-                    Launch campaigns & discover creators
-                  </p>
+              {/* VIDEO */}
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover"
+                src="/brand.mp4"
+              />
+
+              {/* DARK OVERLAY */}
+              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/25 transition-colors" />
+
+              {/* CONTENT */}
+              <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
+                <h3 className="text-xl font-semibold text-white">
+                  Brand
+                </h3>
+                <p className="mt-1 text-sm text-white/80">
+                  Launch campaigns & discover creators
+                </p>
+
+                <div className="mt-4 text-sm font-medium text-emerald-400">
+                  Continue →
                 </div>
-                <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                  <span className="text-emerald-500 font-bold">B</span>
-                </div>
-              </div>
-              <div className="mt-6 text-sm font-medium text-emerald-500">
-                Continue as Brand →
               </div>
             </button>
           </div>

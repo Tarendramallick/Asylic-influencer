@@ -535,18 +535,18 @@ function LoginPage() {
                 backgroundColor: bgColors[bgIndex]
             },
             transition: {
-                duration: 8,
+                duration: 1,
                 ease: "easeInOut"
             },
-            className: "min-h-screen flex items-center justify-center px-4 py-16",
+            className: "h-screen flex items-center justify-center px-4 py-16",
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "w-full max-w-4xl",
+                className: "w-full relative h-full rounded-[32px] border-2 border-lime-300 max-w-8xl",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "text-center mb-12 text-white",
+                        className: "text-center flex justify-center mb-12 text-white",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
-                                className: "text-3xl md:text-4xl font-bold",
+                                className: "absolute  -top-12 bg-lime-300  text-black  font-semibold  text-[40px] px-12 py-4  rounded-full  hover:scale-105  transition-transform z-20",
                                 children: "Welcome to Asylic"
                             }, void 0, false, {
                                 fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
@@ -558,7 +558,16 @@ function LoginPage() {
                                 children: "Choose how you want to continue"
                             }, void 0, false, {
                                 fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                lineNumber: 108,
+                                lineNumber: 119,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                className: " absolute  -bottom-7 bg-lime-300  text-black  font-semibold  text-[15px] px-12 py-4  rounded-full  hover:scale-105  transition-transform z-20 ",
+                                onClick: ()=>router.push("/"),
+                                children: "Get a demo"
+                            }, void 0, false, {
+                                fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
+                                lineNumber: 120,
                                 columnNumber: 13
                             }, this)
                         ]
@@ -568,136 +577,136 @@ function LoginPage() {
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "grid grid-cols-1 md:grid-cols-2 gap-8",
+                        className: "flex flex-col md:flex-row items-center justify-center gap-10",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                 onClick: ()=>setRole("influencer"),
-                                className: "group text-left bg-black/60 border border-white/20 rounded-2xl p-8 hover:border-purple-500 transition-all hover:-translate-y-1 shadow-lg",
+                                className: "group relative w-[300px] aspect-[9/16] overflow-hidden rounded-3xl border border-white/20 shadow-2xl hover:scale-[1.03] transition-transform",
                                 children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("video", {
+                                        autoPlay: true,
+                                        muted: true,
+                                        loop: true,
+                                        playsInline: true,
+                                        className: "absolute inset-0 w-full h-full object-cover",
+                                        src: "/demo.mp4"
+                                    }, void 0, false, {
+                                        fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
+                                        lineNumber: 149,
+                                        columnNumber: 15
+                                    }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex items-center justify-between",
+                                        className: "absolute inset-0 bg-black/40 group-hover:bg-black/25 transition-colors"
+                                    }, void 0, false, {
+                                        fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
+                                        lineNumber: 159,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "absolute bottom-0 left-0 right-0 p-6 z-10",
                                         children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                                        className: "text-xl font-semibold text-white",
-                                                        children: "Influencer"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                                        lineNumber: 120,
-                                                        columnNumber: 19
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "mt-2 text-sm text-white/70",
-                                                        children: "Collaborate with brands & monetize your audience"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                                        lineNumber: 121,
-                                                        columnNumber: 19
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                                lineNumber: 119,
-                                                columnNumber: 17
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$instagram$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Instagram$3e$__["Instagram"], {
-                                                className: "w-8 h-8 text-purple-500 group-hover:scale-110 transition"
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                className: "text-xl font-semibold text-white",
+                                                children: "Influencer"
                                             }, void 0, false, {
                                                 fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                                lineNumber: 125,
+                                                lineNumber: 163,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "mt-1 text-sm text-white/80",
+                                                children: "Collaborate with brands & monetize your audience"
+                                            }, void 0, false, {
+                                                fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
+                                                lineNumber: 166,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "mt-4 text-sm font-medium text-purple-400",
+                                                children: "Continue →"
+                                            }, void 0, false, {
+                                                fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
+                                                lineNumber: 170,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                        lineNumber: 118,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "mt-6 text-sm font-medium text-purple-500",
-                                        children: "Continue as Influencer →"
-                                    }, void 0, false, {
-                                        fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                        lineNumber: 127,
+                                        lineNumber: 162,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                lineNumber: 114,
+                                lineNumber: 144,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                 onClick: ()=>setRole("brand"),
-                                className: "group text-left bg-black/60 border border-white/20 rounded-2xl p-8 hover:border-emerald-500 transition-all hover:-translate-y-1 shadow-lg",
+                                className: "group relative w-[300px] aspect-[9/16] overflow-hidden rounded-3xl border border-white/20 shadow-2xl hover:scale-[1.03] transition-transform",
                                 children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("video", {
+                                        autoPlay: true,
+                                        muted: true,
+                                        loop: true,
+                                        playsInline: true,
+                                        className: "absolute inset-0 w-full h-full object-cover",
+                                        src: "/brand.mp4"
+                                    }, void 0, false, {
+                                        fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
+                                        lineNumber: 182,
+                                        columnNumber: 15
+                                    }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex items-center justify-between",
+                                        className: "absolute inset-0 bg-black/40 group-hover:bg-black/25 transition-colors"
+                                    }, void 0, false, {
+                                        fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
+                                        lineNumber: 192,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "absolute bottom-0 left-0 right-0 p-6 z-10",
                                         children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                                        className: "text-xl font-semibold text-white",
-                                                        children: "Brand"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                                        lineNumber: 139,
-                                                        columnNumber: 19
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "mt-2 text-sm text-white/70",
-                                                        children: "Launch campaigns & discover creators"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                                        lineNumber: 140,
-                                                        columnNumber: 19
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                className: "text-xl font-semibold text-white",
+                                                children: "Brand"
+                                            }, void 0, false, {
                                                 fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                                lineNumber: 138,
+                                                lineNumber: 196,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "mt-1 text-sm text-white/80",
+                                                children: "Launch campaigns & discover creators"
+                                            }, void 0, false, {
+                                                fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
+                                                lineNumber: 199,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center",
-                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                    className: "text-emerald-500 font-bold",
-                                                    children: "B"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                                    lineNumber: 145,
-                                                    columnNumber: 19
-                                                }, this)
+                                                className: "mt-4 text-sm font-medium text-emerald-400",
+                                                children: "Continue →"
                                             }, void 0, false, {
                                                 fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                                lineNumber: 144,
+                                                lineNumber: 203,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                        lineNumber: 137,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "mt-6 text-sm font-medium text-emerald-500",
-                                        children: "Continue as Brand →"
-                                    }, void 0, false, {
-                                        fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                        lineNumber: 148,
+                                        lineNumber: 195,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                lineNumber: 133,
+                                lineNumber: 177,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                        lineNumber: 112,
+                        lineNumber: 142,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -708,12 +717,12 @@ function LoginPage() {
                             children: "Back to Home"
                         }, void 0, false, {
                             fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                            lineNumber: 156,
+                            lineNumber: 212,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                        lineNumber: 155,
+                        lineNumber: 211,
                         columnNumber: 11
                     }, this)
                 ]
@@ -753,14 +762,14 @@ function LoginPage() {
                                     className: "w-4 h-4 mr-2"
                                 }, void 0, false, {
                                     fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                    lineNumber: 180,
+                                    lineNumber: 236,
                                     columnNumber: 13
                                 }, this),
                                 "Back"
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                            lineNumber: 174,
+                            lineNumber: 230,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardTitle"], {
@@ -768,7 +777,7 @@ function LoginPage() {
                             children: isInfluencer ? "Influencer Login" : isBrand ? "Brand Login" : "Admin Login"
                         }, void 0, false, {
                             fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                            lineNumber: 183,
+                            lineNumber: 239,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardDescription"], {
@@ -776,13 +785,13 @@ function LoginPage() {
                             children: isInfluencer ? "Sign in to your creator account" : isBrand ? "Sign in to your brand account" : "Sign in to admin panel"
                         }, void 0, false, {
                             fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                            lineNumber: 186,
+                            lineNumber: 242,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                    lineNumber: 173,
+                    lineNumber: 229,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -800,14 +809,14 @@ function LoginPage() {
                                             className: "w-5 h-5 mr-2"
                                         }, void 0, false, {
                                             fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                            lineNumber: 206,
+                                            lineNumber: 262,
                                             columnNumber: 17
                                         }, this),
                                         "Continue with Instagram"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                    lineNumber: 201,
+                                    lineNumber: 257,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -815,7 +824,7 @@ function LoginPage() {
                                     children: "Recommended for creators • Fast & secure"
                                 }, void 0, false, {
                                     fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                    lineNumber: 210,
+                                    lineNumber: 266,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -829,7 +838,7 @@ function LoginPage() {
                                             children: showTestTokenForm ? "Hide Test Login" : "Login with Test Token"
                                         }, void 0, false, {
                                             fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                            lineNumber: 216,
+                                            lineNumber: 272,
                                             columnNumber: 17
                                         }, this),
                                         showTestTokenForm && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -841,7 +850,7 @@ function LoginPage() {
                                                     children: "Instagram Access Token"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                                    lineNumber: 227,
+                                                    lineNumber: 283,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -853,7 +862,7 @@ function LoginPage() {
                                                     rows: 3
                                                 }, void 0, false, {
                                                     fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                                    lineNumber: 228,
+                                                    lineNumber: 284,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -863,19 +872,19 @@ function LoginPage() {
                                                     children: isLoading ? "Logging in..." : "Login as Test User"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                                    lineNumber: 236,
+                                                    lineNumber: 292,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                            lineNumber: 226,
+                                            lineNumber: 282,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                    lineNumber: 215,
+                                    lineNumber: 271,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -887,12 +896,12 @@ function LoginPage() {
                                                 className: "w-full border-t border-white/20"
                                             }, void 0, false, {
                                                 fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                                lineNumber: 246,
+                                                lineNumber: 302,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                            lineNumber: 245,
+                                            lineNumber: 301,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -902,24 +911,24 @@ function LoginPage() {
                                                 children: "Or continue with email"
                                             }, void 0, false, {
                                                 fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                                lineNumber: 249,
+                                                lineNumber: 305,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                            lineNumber: 248,
+                                            lineNumber: 304,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                    lineNumber: 244,
+                                    lineNumber: 300,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                            lineNumber: 199,
+                            lineNumber: 255,
                             columnNumber: 13
                         }, this),
                         isBrand && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -927,7 +936,7 @@ function LoginPage() {
                             children: "Sign in to manage your campaigns & creators"
                         }, void 0, false, {
                             fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                            lineNumber: 259,
+                            lineNumber: 315,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -942,7 +951,7 @@ function LoginPage() {
                                             children: "Email"
                                         }, void 0, false, {
                                             fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                            lineNumber: 267,
+                                            lineNumber: 323,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -953,13 +962,13 @@ function LoginPage() {
                                             required: true
                                         }, void 0, false, {
                                             fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                            lineNumber: 268,
+                                            lineNumber: 324,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                    lineNumber: 266,
+                                    lineNumber: 322,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -970,7 +979,7 @@ function LoginPage() {
                                             children: "Password"
                                         }, void 0, false, {
                                             fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                            lineNumber: 278,
+                                            lineNumber: 334,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -984,7 +993,7 @@ function LoginPage() {
                                                     required: true
                                                 }, void 0, false, {
                                                     fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                                    lineNumber: 280,
+                                                    lineNumber: 336,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -995,30 +1004,30 @@ function LoginPage() {
                                                         className: "w-4 h-4"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                                        lineNumber: 292,
+                                                        lineNumber: 348,
                                                         columnNumber: 35
                                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$eye$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Eye$3e$__["Eye"], {
                                                         className: "w-4 h-4"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                                        lineNumber: 292,
+                                                        lineNumber: 348,
                                                         columnNumber: 68
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                                    lineNumber: 287,
+                                                    lineNumber: 343,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                            lineNumber: 279,
+                                            lineNumber: 335,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                    lineNumber: 277,
+                                    lineNumber: 333,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1028,13 +1037,13 @@ function LoginPage() {
                                     children: isLoading ? "Signing in..." : "Sign In"
                                 }, void 0, false, {
                                     fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                    lineNumber: 297,
+                                    lineNumber: 353,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                            lineNumber: 265,
+                            lineNumber: 321,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1044,7 +1053,7 @@ function LoginPage() {
                                     children: "Don't have an account? "
                                 }, void 0, false, {
                                     fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                    lineNumber: 304,
+                                    lineNumber: 360,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Downloads$2f$Jay$2f$Asylic$2d$influencer$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1053,30 +1062,30 @@ function LoginPage() {
                                     children: "Sign up"
                                 }, void 0, false, {
                                     fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                                    lineNumber: 305,
+                                    lineNumber: 361,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                            lineNumber: 303,
+                            lineNumber: 359,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-                    lineNumber: 195,
+                    lineNumber: 251,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-            lineNumber: 172,
+            lineNumber: 228,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/Downloads/Jay/Asylic-influencer/app/login/page.tsx",
-        lineNumber: 167,
+        lineNumber: 223,
         columnNumber: 5
     }, this);
 }
