@@ -134,7 +134,7 @@ export default function LoginClient() {
             "
             onClick={() => router.push("/")}
           >
-            Get a demo
+             Back to Home
           </button>
           </div>
 
