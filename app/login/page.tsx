@@ -19,7 +19,16 @@ export default function LoginPage() {
   const { login } = useAuth();
   const { toast } = useToast();
 
-  const [role, setRole] = useState<string>(roleParam || "");
+  // const [role, setRole] = useState<string>(roleParam || "");
+  const [role, setRole] = useState<string>("");
+
+useEffect(() => {
+  const paramRole = searchParams.get("role");
+  if (paramRole) {
+    setRole(paramRole);
+  }
+}, [searchParams]);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
