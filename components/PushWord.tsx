@@ -36,7 +36,7 @@ const PushLetter = ({ char, delay, fontSize = 200, color = 'white', startAnimati
         initial="hidden"
         animate={startAnimation ? 'visible' : 'hidden'}
         variants={topVariants}
-        transition={{ duration: 0.8, delay, ease: 'easeInOut' }}
+        transition={{ duration: 0.5, delay, ease: 'easeInOut' }}
         style={{
           position: 'absolute',
           top: 0,
@@ -59,7 +59,7 @@ const PushLetter = ({ char, delay, fontSize = 200, color = 'white', startAnimati
         initial="hidden"
         animate={startAnimation ? 'visible' : 'hidden'}
         variants={bottomVariants}
-        transition={{ duration: 0.8, delay, ease: 'easeInOut' }}
+        transition={{ duration: 0.5, delay, ease: 'easeInOut' }}
         style={{
           position: 'absolute',
           top: 0,

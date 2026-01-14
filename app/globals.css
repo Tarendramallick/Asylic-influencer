@@ -125,8 +125,45 @@
   }
 }
 /* ===== Infinite Marquee Animation ===== */
+/* Embla base */
+.embla {
+  width: 100%;
+}
 
-@keyframes marquee {
+.embla__viewport {
+  overflow: hidden;
+}
+
+.embla__container {
+  display: flex;
+  gap: 24px;
+}
+
+.embla__slide {
+  flex: 0 0 auto;
+}
+
+/* Logo card styling */
+.logo-card {
+  width: 180px;
+  height: 90px;
+  background: white;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: grayscale(100%);
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.logo-card:hover {
+  filter: grayscale(0%);
+  opacity: 1;
+  transform: translateY(-4px);
+}
+
+/* @keyframes marquee {
   0% {
     transform: translateX(0%);
   }
@@ -144,7 +181,7 @@
 .marquee-wrapper {
   overflow: hidden;
   width: 100%;
-}
+} */
 .anton {
   font-family: var(--font-anton), sans-serif;
 }
@@ -152,4 +189,13 @@
   h1, h2, h3 {
     font-family: var(--font-anton), sans-serif;
   }
+}
+/* Hide scrollbar but allow scroll */
+.hide-scrollbar {
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE & Edge */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;                /* Chrome, Safari */
 }
