@@ -56,12 +56,12 @@ export default function HomePage() {
       </div>
       <GetADemo />
       <FeatureScroller />
-      <div className="min-h-[100vh] w-[50%] flex flex-col font-anton justify-center items-center bg-black">
+      {/* <div className="min-h-[100vh] w-[50%] flex flex-col font-anton justify-center items-center bg-black">
       <PushWord text="TARENDRA" fontSize={80} color="#FF0055" letterSpacing={0} />
       <PushWord text="MALLICK" fontSize={80} color="white" letterSpacing={10}  />
-        {/* <PushWord text="TARENDRA" fontSize={50} color="#FF0055" letterSpacing={15} delayStep={0} />
-        <PushWord text="MALLICK" fontSize={80} color="white" letterSpacing={20} delayStep={0.01} /> */}
-      </div>
+        <PushWord text="TARENDRA" fontSize={50} color="#FF0055" letterSpacing={15} delayStep={0} />
+        <PushWord text="MALLICK" fontSize={80} color="white" letterSpacing={20} delayStep={0.01} />
+      </div> */}
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">

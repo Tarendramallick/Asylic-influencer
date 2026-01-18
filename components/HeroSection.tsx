@@ -35,7 +35,7 @@ export default function HeroSection() {
   useEffect(() => {
     const reelInterval = setInterval(() => {
       setReelIndex((prev) => (prev + 1) % reels.length);
-    }, 3500); // each mobile short shows 3.5s
+    }, 3500);
     return () => clearInterval(reelInterval);
   }, []);
 
@@ -50,6 +50,7 @@ export default function HeroSection() {
       })),
     []
   );
+
   const rightHearts = useMemo(
     () =>
       Array.from({ length: 3 }).map(() => ({
@@ -65,12 +66,12 @@ export default function HeroSection() {
     <motion.section
       animate={{ backgroundColor: heroSlides[index].bg }}
       transition={{ duration: 1.2, ease: 'easeInOut' }}
-      className="flex justify-center mt-6 rounded-3xl mx-6 md:mx-20"
+      className="flex justify-center mt-6 rounded-3xl mx-4 md:mx-20 overflow-hidden"
     >
-      <div className="w-full max-w-7xl rounded-3xl p-8 md:p-16 flex flex-col md:flex-row items-center justify-between gap-12">
+      <div className="w-full max-w-7xl rounded-3xl p-6 md:p-16 flex flex-col md:flex-row items-center justify-between gap-12">
 
         {/* LEFT CONTENT */}
-        <div className="text-white max-w-xl">
+        <div className="text-white max-w-xl text-center md:text-left">
           <AnimatePresence mode="wait">
             <motion.h1
               key={heroSlides[index].title}
@@ -78,13 +79,13 @@ export default function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -30 }}
               transition={{ duration: 0.6 }}
-              className="text-4xl md:text-6xl font-bold leading-tight"
+              className="text-3xl sm:text-4xl md:text-6xl font-bold leading-tight"
             >
               {heroSlides[index].title}
             </motion.h1>
           </AnimatePresence>
 
-          <p className="mt-6 text-lg text-white/90">
+          <p className="mt-6 text-base sm:text-lg text-white/90">
             Go beyond influencer marketing software. Upgrade to GRIN&apos;s
             AI-powered creator marketing platform.
           </p>
@@ -150,7 +151,7 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* PHONE UI DESKTOP */}
+          {/* PHONE UI DESKTOP (UNCHANGED) */}
           <div className="hidden md:block relative z-10 w-[260px] md:w-[300px] h-[520px] bg-black rounded-[40px] overflow-hidden shadow-2xl">
             <AnimatePresence mode="wait">
               <motion.div
@@ -172,7 +173,7 @@ export default function HeroSection() {
           </div>
 
           {/* MOBILE REEL CAROUSEL */}
-          <div className="md:hidden w-64 h-512 relative rounded-3xl overflow-hidden shadow-2xl bg-black">
+          <div className="md:hidden w-64 h-[480px] relative rounded-3xl overflow-hidden shadow-2xl bg-black mx-auto">
             <AnimatePresence mode="wait">
               <motion.div
                 key={reels[reelIndex].id}

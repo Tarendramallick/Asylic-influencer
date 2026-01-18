@@ -97,124 +97,276 @@ export default function LoginClient() {
   if (!role) {
     return (
       <motion.div
-        animate={{ backgroundColor: bgColors[bgIndex] }}
-        transition={{ duration: 1, ease: "easeInOut" }}
-        className="h-screen flex items-center justify-center px-4 py-16"
-      >
-        <div className="w-full relative h-full rounded-[32px] border-2 border-lime-300 max-w-8xl">
-          {/* Header */}
-          <div className="text-center flex justify-center mb-12 text-white">
-            <h1 className="absolute 
-              -top-12
-              bg-lime-300 
-              text-black 
-              font-semibold 
-              text-[40px]
-              px-12
-              py-4 
-              rounded-full 
-              hover:scale-105 
-              transition-transform
-              z-20">Welcome to Asylic</h1>
-            <p className="mt-2 text-white/70">Choose how you want to continue</p>
-            <button
+      animate={{ backgroundColor: bgColors[bgIndex] }}
+      transition={{ duration: 1, ease: 'easeInOut' }}
+      className="h-screen flex items-center justify-center px-4 py-16 max-sm:min-h-[100svh]"
+    >
+      <div className="w-full relative h-full rounded-[32px] border-2 border-lime-300 max-w-8xl flex flex-col justify-between">
+
+        {/* Header */}
+        <div className="text-center flex justify-center mb-12 text-white relative">
+          <h1
             className="
               absolute 
-              -bottom-7
+              -top-12 max-sm:-top-8
               bg-lime-300 
               text-black 
               font-semibold 
-              text-[15px]
-              px-12
-              py-4 
+              text-[40px] max-sm:text-[28px]
+              px-12 max-sm:px-8
+              py-4 max-sm:py-3
               rounded-full 
               hover:scale-105 
               transition-transform
               z-20
             "
-            onClick={() => router.push("/")}
           >
-             Back to Home
-          </button>
-          </div>
-
-          {/* Role Cards */}
-          <div className="flex flex-col md:flex-row items-center justify-center gap-10">
-            {/* Influencer */}
-            <button
-              onClick={() => setRole("influencer")}
-              className="group relative w-[300px] aspect-[9/16] overflow-hidden rounded-3xl border border-white/20 shadow-2xl hover:scale-[1.03] transition-transform"
-            >
-              {/* VIDEO */}
-              <video
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="absolute inset-0 w-full h-full object-cover"
-                src="/demo.mp4"
-              />
-
-              {/* DARK OVERLAY */}
-              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/25 transition-colors" />
-
-              {/* CONTENT */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
-                <h3 className="text-xl font-semibold text-white">
-                  Influencer
-                </h3>
-                <p className="mt-1 text-sm text-white/80">
-                  Collaborate with brands & monetize your audience
-                </p>
-
-                <div className="mt-4 text-sm font-medium text-purple-400">
-                  Continue →
-                </div>
-              </div>
-            </button>
-
-            {/* Brand */}
-            <button
-              onClick={() => setRole("brand")}
-              className="group relative w-[300px] aspect-[9/16] overflow-hidden rounded-3xl border border-white/20 shadow-2xl hover:scale-[1.03] transition-transform"
-            >
-              {/* VIDEO */}
-              <video
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="absolute inset-0 w-full h-full object-cover"
-                src="/brand.mp4"
-              />
-
-              {/* DARK OVERLAY */}
-              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/25 transition-colors" />
-
-              {/* CONTENT */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
-                <h3 className="text-xl font-semibold text-white">
-                  Brand
-                </h3>
-                <p className="mt-1 text-sm text-white/80">
-                  Launch campaigns & discover creators
-                </p>
-
-                <div className="mt-4 text-sm font-medium text-emerald-400">
-                  Continue →
-                </div>
-              </div>
-            </button>
-          </div>
-
-          {/* Footer */}
-          <div className="mt-10 text-center">
-            <Button variant="ghost" onClick={() => router.push("/")}>
-              Back to Home
-            </Button>
-          </div>
+            Welcome to Asylic
+          </h1>
+          <p className="mt-2 text-white/70">
+            Choose how you want to continue
+          </p>
         </div>
-      </motion.div>
+
+        {/* Role Cards */}
+        <div className="flex flex-col md:flex-row items-center justify-center gap-10 max-sm:gap-0 h-full">
+          {/* Influencer */}
+          <button
+            onClick={() => setRole('influencer')}
+            className="
+              group
+              relative
+              w-[300px] md:w-[300px]
+              aspect-[9/16]
+              max-sm:aspect-auto
+              max-sm:h-[30vh]
+              overflow-hidden
+              rounded-3xl
+              border border-white/20
+              shadow-2xl
+              hover:scale-[1.03]
+              transition-transform
+              flex-shrink-0
+            "
+          >
+            {/* VIDEO */}
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+              src="/demo.mp4"
+            />
+
+            {/* DARK OVERLAY */}
+            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/25 transition-colors" />
+
+            {/* CONTENT */}
+            <div className="absolute bottom-0 left-0 right-0 p-6 max-sm:p-4 z-10">
+              <h3 className="text-xl max-sm:text-lg font-semibold text-white">
+                Influencer
+              </h3>
+              <p className="mt-1 text-sm max-sm:text-xs text-white/80">
+                Collaborate with brands & monetize your audience
+              </p>
+
+              <div className="mt-4 text-sm font-medium text-purple-400">
+                Continue →
+              </div>
+            </div>
+          </button>
+
+          {/* Brand */}
+          <button
+            onClick={() => setRole('brand')}
+            className="
+              group
+              relative
+              w-[300px] md:w-[300px]
+              aspect-[9/16]
+              max-sm:mt-4
+              max-sm:aspect-auto
+              max-sm:h-[30vh]
+              overflow-hidden
+              rounded-3xl
+              border border-white/20
+              shadow-2xl
+              hover:scale-[1.03]
+              transition-transform
+              flex-shrink-0
+            "
+          >
+            {/* VIDEO */}
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+              src="/brand.mp4"
+            />
+
+            {/* DARK OVERLAY */}
+            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/25 transition-colors" />
+
+            {/* CONTENT */}
+            <div className="absolute bottom-0 left-0 right-0 p-6 max-sm:p-4 z-10">
+              <h3 className="text-xl max-sm:text-lg font-semibold text-white">
+                Brand
+              </h3>
+              <p className="mt-1 text-sm max-sm:text-xs text-white/80">
+                Launch campaigns & discover creators
+              </p>
+
+              <div className="mt-4 text-sm font-medium text-emerald-400">
+                Continue →
+              </div>
+            </div>
+          </button>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-10 mb-6 text-center justify-center flex">
+          <button
+            className=" absolute 
+              -bottom-7 max-sm:-bottom-5
+              bg-lime-300 
+              text-black 
+              font-semibold 
+              text-[15px] max-sm:text-[13px]
+              px-12 max-sm:px-8
+              py-4 max-sm:py-3
+              rounded-full 
+              hover:scale-105 
+              transition-transform
+              z-20"
+            onClick={() => router.push('/')}
+          >
+            Back to Home
+          </button>
+        </div>
+      </div>
+    </motion.div>
+      // <motion.div
+      //   animate={{ backgroundColor: bgColors[bgIndex] }}
+      //   transition={{ duration: 1, ease: "easeInOut" }}
+      //   className="h-screen flex items-center justify-center px-4 py-16"
+      // >
+      //   <div className="w-full relative h-full rounded-[32px] border-2 border-lime-300 max-w-8xl">
+      //     {/* Header */}
+      //     <div className="text-center flex justify-center mb-12 text-white">
+      //       <h1 className="absolute 
+      //         -top-12
+      //         bg-lime-300 
+      //         text-black 
+      //         font-semibold 
+      //         text-[40px]
+      //         px-12
+      //         py-4 
+      //         rounded-full 
+      //         hover:scale-105 
+      //         transition-transform
+      //         z-20">Welcome to Asylic</h1>
+      //       <p className="mt-2 text-white/70">Choose how you want to continue</p>
+      //       <button
+      //       className="
+      //         absolute 
+      //         -bottom-7
+      //         bg-lime-300 
+      //         text-black 
+      //         font-semibold 
+      //         text-[15px]
+      //         px-12
+      //         py-4 
+      //         rounded-full 
+      //         hover:scale-105 
+      //         transition-transform
+      //         z-20
+      //       "
+      //       onClick={() => router.push("/")}
+      //     >
+      //        Back to Home
+      //     </button>
+      //     </div>
+
+      //     {/* Role Cards */}
+      //     <div className="flex flex-col md:flex-row items-center justify-center gap-10">
+      //       {/* Influencer */}
+      //       <button
+      //         onClick={() => setRole("influencer")}
+      //         className="group relative w-[300px] aspect-[9/16] overflow-hidden rounded-3xl border border-white/20 shadow-2xl hover:scale-[1.03] transition-transform"
+      //       >
+      //         {/* VIDEO */}
+      //         <video
+      //           autoPlay
+      //           muted
+      //           loop
+      //           playsInline
+      //           className="absolute inset-0 w-full h-full object-cover"
+      //           src="/demo.mp4"
+      //         />
+
+      //         {/* DARK OVERLAY */}
+      //         <div className="absolute inset-0 bg-black/40 group-hover:bg-black/25 transition-colors" />
+
+      //         {/* CONTENT */}
+      //         <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
+      //           <h3 className="text-xl font-semibold text-white">
+      //             Influencer
+      //           </h3>
+      //           <p className="mt-1 text-sm text-white/80">
+      //             Collaborate with brands & monetize your audience
+      //           </p>
+
+      //           <div className="mt-4 text-sm font-medium text-purple-400">
+      //             Continue →
+      //           </div>
+      //         </div>
+      //       </button>
+
+      //       {/* Brand */}
+      //       <button
+      //         onClick={() => setRole("brand")}
+      //         className="group relative w-[300px] aspect-[9/16] overflow-hidden rounded-3xl border border-white/20 shadow-2xl hover:scale-[1.03] transition-transform"
+      //       >
+      //         {/* VIDEO */}
+      //         <video
+      //           autoPlay
+      //           muted
+      //           loop
+      //           playsInline
+      //           className="absolute inset-0 w-full h-full object-cover"
+      //           src="/brand.mp4"
+      //         />
+
+      //         {/* DARK OVERLAY */}
+      //         <div className="absolute inset-0 bg-black/40 group-hover:bg-black/25 transition-colors" />
+
+      //         {/* CONTENT */}
+      //         <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
+      //           <h3 className="text-xl font-semibold text-white">
+      //             Brand
+      //           </h3>
+      //           <p className="mt-1 text-sm text-white/80">
+      //             Launch campaigns & discover creators
+      //           </p>
+
+      //           <div className="mt-4 text-sm font-medium text-emerald-400">
+      //             Continue →
+      //           </div>
+      //         </div>
+      //       </button>
+      //     </div>
+
+      //     {/* Footer */}
+      //     <div className="mt-10 text-center">
+      //       <Button variant="ghost" onClick={() => router.push("/")}>
+      //         Back to Home
+      //       </Button>
+      //     </div>
+      //   </div>
+      // </motion.div>
     );
   }
 

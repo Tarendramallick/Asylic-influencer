@@ -7,14 +7,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function Header() {
   const [hidden, setHidden] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const controlHeader = () => {
       if (window.scrollY > lastScrollY && window.scrollY > 100) {
-        // scrolling down
         setHidden(true);
       } else {
-        // scrolling up
         setHidden(false);
       }
       setLastScrollY(window.scrollY);
@@ -31,14 +30,10 @@ export default function Header() {
           initial={{ y: -120, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -120, opacity: 0 }}
-          transition={{
-            type: 'spring',
-            stiffness: 260,
-            damping: 20,
-          }}
+          transition={{ type: 'spring', stiffness: 260, damping: 20 }}
           className="fixed top-0 left-0 w-full z-50 flex justify-center"
         >
-          <div className="mt-4 w-[95%] max-w-8xl bg-[#141414] rounded-full px-8 py-6 flex items-center justify-between shadow-xl backdrop-blur-md">
+          <div className="mt-4 w-[95%] max-w-8xl bg-[#141414] rounded-full px-6 md:px-8 py-4 md:py-6 flex items-center justify-between shadow-xl backdrop-blur-md relative">
 
             {/* Logo */}
             <div className="flex items-center gap-2 text-white font-bold text-xl">
@@ -48,13 +43,13 @@ export default function Header() {
               Asylic
             </div>
 
-            {/* Navigation */}
+            {/* Desktop Navigation (UNCHANGED) */}
             <nav className="hidden md:flex items-center gap-8 text-lg font-semibold text-white">
-              <Link href="#" className="hover:text-white">Solutions</Link>
-              <Link href="#" className="hover:text-white">Programs</Link>
-              <Link href="#" className="hover:text-white">Customers</Link>
-              <Link href="#" className="hover:text-white">Insights</Link>
-              <Link href="#" className="hover:text-white">Why Asylic</Link>
+              <Link href="#">Solutions</Link>
+              <Link href="#">Programs</Link>
+              <Link href="#">Customers</Link>
+              <Link href="#">Insights</Link>
+              <Link href="#">Why Asylic</Link>
             </nav>
 
             {/* Actions */}
@@ -72,7 +67,70 @@ export default function Header() {
               >
                 Get started
               </Link>
+
+              {/* Hamburger (Mobile Only) */}
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="md:hidden flex flex-col justify-center items-center gap-1.5 ml-2"
+                aria-label="Toggle menu"
+              >
+                <span
+                  className={`w-6 h-0.5 bg-white transition ${
+                    menuOpen ? 'rotate-45 translate-y-2' : ''
+                  }`}
+                />
+                <span
+                  className={`w-6 h-0.5 bg-white transition ${
+                    menuOpen ? 'opacity-0' : ''
+                  }`}
+                />
+                <span
+                  className={`w-6 h-0.5 bg-white transition ${
+                    menuOpen ? '-rotate-45 -translate-y-2' : ''
+                  }`}
+                />
+              </button>
             </div>
+
+            {/* Mobile Menu */}
+            <AnimatePresence>
+              {menuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.25 }}
+                  className="absolute top-full left-0 mt-4 w-full bg-[#141414] rounded-3xl shadow-2xl md:hidden overflow-hidden"
+                >
+                  <nav className="flex flex-col divide-y divide-white/10 text-white text-lg font-medium">
+                    {[
+                      'Solutions',
+                      'Programs',
+                      'Customers',
+                      'Insights',
+                      'Why Asylic',
+                    ].map((item) => (
+                      <Link
+                        key={item}
+                        href="#"
+                        onClick={() => setMenuOpen(false)}
+                        className="px-6 py-4 hover:bg-white/5 transition"
+                      >
+                        {item}
+                      </Link>
+                    ))}
+
+                    <Link
+                      href="/login"
+                      onClick={() => setMenuOpen(false)}
+                      className="px-6 py-4 hover:bg-white/5 transition"
+                    >
+                      Login
+                    </Link>
+                  </nav>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
           </div>
         </motion.header>
