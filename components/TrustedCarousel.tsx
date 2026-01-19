@@ -23,7 +23,7 @@ export default function TrustedCarousel() {
   );
 
   return (
-    <section className="py-20 bg-white overflow-hidden">
+    <section className="py-20 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 text-center">
         <h2 className="text-3xl md:text-4xl font-semibold text-black mb-12">
           Trusted by <span className="font-bold">1900+</span> in-house teams
