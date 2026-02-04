@@ -16,6 +16,8 @@ import FeatureScroller from "@/components/PhantomScroller"
 import Footer from "@/components/Footer"
 import HorizontalScroll from "@/components/HorizontalScroll"
 import ReelsHorizontalScroll from "@/components/HorizontalScroll"
+import FeatureCardScroller from "@/components/PhantomScroller"
+import MetaMaskHeroMorph from "@/components/CardAnimation"
 
 export default function HomePage() {
   const router = useRouter()
@@ -27,6 +29,8 @@ export default function HomePage() {
       <HeroSection />
       <TrustedCarousel />
       <ReelsHorizontalScroll />
+      <FeatureCardScroller />
+      <MetaMaskHeroMorph />
       <div>
       <ScrollCard
         index={0}

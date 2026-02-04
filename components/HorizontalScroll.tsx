@@ -91,49 +91,65 @@ export default function ReelsHorizontalScroll() {
         >
           {reels.map((reel, index) => (
             <div
-              key={index}
-              className="
-                min-w-[280px]
-                sm:min-w-[320px]
-                lg:min-w-[360px]
-                aspect-[9/16]
-                rounded-[28px]
-                overflow-hidden
-                relative
-                bg-black
-                shadow-xl
-              "
-            >
-              {/* Image */}
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline 
-                src={reel.video}
-                className="absolute inset-0 w-full h-full object-cover"
-              />
+                key={index}
+                className="
+                    relative
+                    min-w-[280px]
+                    sm:min-w-[320px]
+                    lg:min-w-[360px]
+                    aspect-[9/16]
+                    flex
+                    items-center
+                    justify-center
+                "
+                >
+                {/* SCREEN */}
+                <div
+                    className="
+                    absolute
+                    top-
+                    left-[8.5%]
+                    w-[83%]
+                    h-[99%]
+                    text-center
+                    flex
+                    flex-col
+                    justify-center
+                    items-center
+                    rounded-[50px]
+                    overflow-hidden
+                    bg-black
+                    z-10
+                    "
+                >
+                    <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    src={reel.video}
+                    className="w-full h-full object-cover"
+                    />
 
-              {/* Dark overlay */}
-              <div className="absolute inset-0 bg-black/10" />
+                    <div className="absolute inset-0 bg-black/10" />
 
-              {/* Brand */}
-              <div className="relative font-anton flex justify-center items-center top-4 left-4 text-white text-2xl font-semibold">
-                {reel.brand}
-              </div>
+                    <div className="absolute top-14 justify-center text-white text-xl font-anton">
+                    {reel.brand}
+                    </div>
 
-              {/* Creator */}
-              <div className="absolute bottom-4 left-4 text-white text-sm font-medium">
-                {reel.name}
-              </div>
-
-              {/* Fake play button */}
-              {/* <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-14 h-14 rounded-full bg-black/50 flex items-center justify-center text-white text-xl">
-                  ▶
+                    <div className="absolute bottom-4 justify-center text-center text-white text-sm font-medium">
+                    {reel.name}
+                    </div>
                 </div>
-              </div> */}
+
+                {/* FRAME */}
+                <img
+                    src="/iphone.png"
+                    alt="Phone Frame"
+                    className="absolute inset-0 w-full h-full object-contain z-20 pointer-events-none"
+                />
             </div>
+
           ))}
         </div>
       </div>
